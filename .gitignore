@@ -1,0 +1,28 @@
+# Môi trường & Mật khẩu bí mật
+.env
+.env.local
+.env.*.local
+*.env
+
+# Thư viện phụ thuộc (Dependencies)
+node_modules/
+__pycache__/
+*.pyc
+venv/
+env/
+.venv/
+
+# Build & biên dịch
+dist/
+build/
+.next/
+out/
+*.log
+
+# Cấu hình IDE & Hệ điều hành
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
