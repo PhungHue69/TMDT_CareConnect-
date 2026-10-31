@@ -1,0 +1,54 @@
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+
+/* Blue, compact pharmacy layout inspired by the provided Website HTML; data and routes remain live. */
+@theme {
+  --color-brand: #1a56db;
+  --color-brand-dark: #1442a8;
+  --color-brand-soft: #dce6fb;
+  --color-page: #f4f7fc;
+  --color-line: #e3e8f2;
+  --color-ink: #0f1e3d;
+  --color-muted: #56607a;
+  --color-accent: #d97706;
+  --color-accent-soft: #fff3e3;
+  --color-accent-line: #e0a25a;
+  --color-warn-bg: #fef3c7;
+  --color-warn-ink: #92400e;
+  --color-danger-bg: #fee2e2;
+  --color-danger-ink: #991b1b;
+  --font-display: var(--font-lexend), "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Be Vietnam Pro", "Segoe UI", ui-sans-serif, system-ui, Arial, sans-serif;
+}
+
+html {
+  color-scheme: light;
+}
+
+/* Desktop-width screens render everything ~25% smaller; phones and tablets keep the default 16px root. */
+@media (min-width: 1024px) {
+  html { font-size: 12px; }
+}
+
+body {
+  background: var(--color-page);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+/* Leaflet controls and popups restyled to match the reference map card. */
+.leaflet-container { font-family: var(--font-sans); }
+.leaflet-top.leaflet-right { top: 12px; right: 12px; display: flex; flex-direction: column-reverse; gap: 10px; }
+.leaflet-top.leaflet-right .leaflet-control { margin: 0; }
+.leaflet-bar { border: 0 !important; border-radius: 12px !important; overflow: hidden; box-shadow: 0 2px 8px rgba(15, 30, 61, 0.12) !important; }
+.leaflet-bar a { width: 2.5rem !important; height: 2.5rem !important; line-height: 2.5rem !important; color: var(--color-ink) !important; font-size: 20px !important; }
+.tgb-locate { width: 2.5rem; height: 2.5rem; display: flex; align-items: center; justify-content: center; background: #fff; color: var(--color-ink); cursor: pointer; }
+.tgb-popup-wrap .leaflet-popup-content-wrapper { border-radius: 14px; box-shadow: 0 6px 20px rgba(15, 30, 61, 0.16); }
+.tgb-popup-wrap .leaflet-popup-content { margin: 12px 16px; }
+.tgb-popup { display: flex; flex-direction: column; gap: 2px; min-width: 10.5rem; color: var(--color-ink); }
+.tgb-popup strong { font-size: 0.875rem; }
+.tgb-popup span { font-size: 0.75rem; color: var(--color-muted); }
+.tgb-popup button { margin-top: 8px; border: 0; border-radius: 10px; background: var(--color-brand); color: #fff; font: inherit; font-size: 13px; font-weight: 600; padding: 7px 12px; cursor: pointer; }
+/* Calm the topo basemap toward the reference's light grey map. */
+.leaflet-tile-pane { filter: saturate(0.35) brightness(1.06) contrast(0.95); }
+.leaflet-control-attribution { font-size: 10px; }

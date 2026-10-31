@@ -1,0 +1,6 @@
+[
+  {"name": "Amoxicillin 500mg", "active_ingredient": "Amoxicillin", "category": "RX", "unit": "hộp", "price": 45000, "image_url": "https://example.com/amox.jpg", "source_url": "https://example.com/amox"},
+  {"name": "Paracetamol 500mg", "active_ingredient": "Paracetamol", "category": "OTC", "unit": "hộp", "price": 15000, "image_url": "https://example.com/para.jpg", "source_url": "https://example.com/para"},
+  {"name": "Loratadin 10mg", "active_ingredient": "Loratadine", "category": "OTC", "unit": "hộp", "price": 20000, "image_url": "https://example.com/lora.jpg", "source_url": "https://example.com/lora"},
+  {"name": "Vitamin C 1000mg", "active_ingredient": "Ascorbic acid", "category": "TPCN", "unit": "lọ", "price": 80000, "image_url": "https://example.com/vitc.jpg", "source_url": "https://example.com/vitc"}
+]

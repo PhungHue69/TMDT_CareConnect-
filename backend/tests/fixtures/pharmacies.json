@@ -1,0 +1,5 @@
+[
+  {"name": "Nhà thuốc A", "address": "1 Lê Lợi, Q1, TP.HCM", "latitude": 10.7769, "longitude": 106.7009, "phone": "0281111111", "source_url": "https://example.com/a"},
+  {"name": "Nhà thuốc B", "address": "2 Nguyễn Huệ, Q1, TP.HCM", "latitude": 10.7745, "longitude": 106.7032, "phone": "0282222222", "source_url": "https://example.com/b"},
+  {"name": "Nhà thuốc C", "address": "3 Hai Bà Trưng, Q3, TP.HCM", "latitude": 10.7826, "longitude": 106.6930, "phone": "0283333333", "source_url": "https://example.com/c"}
+]
