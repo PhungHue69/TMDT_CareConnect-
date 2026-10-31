@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#1e6fd9">
+    <title>Đăng nhập - CareConnect</title>
+    <link rel="stylesheet" href="../shared/css/base.css">
+    <link rel="stylesheet" href="css/buyer.css">
+</head>
+<body>
+    <main class="auth-page">
+        <div class="auth-card">
+            <div class="auth-brand">
+                <span class="brand-mark" id="brand-icon"></span>
+                <h1>CareConnect</h1>
+                <p class="muted">Chăm sóc sức khỏe gia đình từ xa</p>
+            </div>
+            <form class="card stack" id="login-form" novalidate>
+                <h2>Đăng nhập</h2>
+                <div class="field">
+                    <label for="phone">Số điện thoại</label>
+                    <input class="input" id="phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="0901234567" required>
+                </div>
+                <div class="field">
+                    <label for="password">Mật khẩu</label>
+                    <input class="input" id="password" name="password" type="password" autocomplete="current-password" required>
+                </div>
+                <button class="btn btn-primary btn-lg btn-block" type="submit">Đăng nhập</button>
+                <p class="center small">Chưa có tài khoản? <a href="register.html" id="register-link">Đăng ký</a></p>
+            </form>
+            <div class="stack-sm" style="margin-top:20px">
+                <p class="center small muted">Tài khoản demo (mật khẩu 123456)</p>
+                <div class="demo-accounts">
+                    <button class="chip" data-demo="0900000001">Anh Nam (Con)</button>
+                    <button class="chip" data-demo="0900000002">Bà Lan (Mẹ)</button>
+                    <button class="chip" data-demo="0900000003">Ông Bình (Bố)</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="../shared/js/api.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
