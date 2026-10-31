@@ -141,8 +141,8 @@ router.post('/', ah(async (req, res) => {
         const { rows } = await db.query('SELECT full_name FROM users WHERE id = $1', [req.user.id]);
         await notify(patientId, {
             type: 'MEDICATION_REMINDER',
-            title: 'Con vừa cài lịch uống thuốc cho bạn',
-            body: `${rows[0].full_name} đã cài: ${f.drugName} - ${f.dosage}, lúc ${f.times.sort().join(', ')}.`,
+            title: `${rows[0].full_name} vừa cài lịch uống thuốc cho bạn`,
+            body: `${f.drugName} - ${f.dosage}, lúc ${f.times.sort().join(', ')}. Chuông sẽ reo đúng giờ.`,
             data: { kind: 'REMINDER_CREATED', reminder_ids: created.map((r) => r.id) },
         });
     }

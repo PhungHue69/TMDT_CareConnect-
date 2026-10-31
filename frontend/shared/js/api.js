@@ -4,15 +4,36 @@
     const TOKEN_KEY = 'cc_token';
     const USER_KEY = 'cc_user';
 
-    // localStorage có thể bị chặn (chế độ ẩn danh...), nên luôn bọc try/catch
-    function store(key, value) {
+    /*
+     * Phiên đăng nhập lưu theo từng tab (sessionStorage) để mỗi tab giữ một tài khoản riêng,
+     * ví dụ tab trái là Con, tab phải là Bố mẹ khi demo. localStorage chỉ để tab mới mở
+     * lấy lại lần đăng nhập gần nhất. Bộ nhớ trình duyệt có thể bị chặn nên luôn bọc try/catch.
+     */
+    function setIn(storage, key, value) {
         try {
-            if (value === null) localStorage.removeItem(key);
-            else localStorage.setItem(key, value);
+            if (value === null) storage.removeItem(key);
+            else storage.setItem(key, value);
         } catch (e) { /* bỏ qua */ }
     }
+    function getIn(storage, key) {
+        try { return storage.getItem(key); } catch (e) { return null; }
+    }
+    function store(key, value) {
+        setIn(sessionStorage, key, value);
+        setIn(localStorage, key, value);
+    }
+    // Tab mới mở: nhận lần đăng nhập gần nhất rồi giữ riêng cho tab này
+    function adoptLatestLogin() {
+        if (getIn(sessionStorage, TOKEN_KEY) !== null) return;
+        const token = getIn(localStorage, TOKEN_KEY);
+        if (token === null) return;
+        setIn(sessionStorage, TOKEN_KEY, token);
+        const user = getIn(localStorage, USER_KEY);
+        if (user !== null) setIn(sessionStorage, USER_KEY, user);
+    }
     function load(key) {
-        try { return localStorage.getItem(key); } catch (e) { return null; }
+        adoptLatestLogin();
+        return getIn(sessionStorage, key);
     }
 
     CC.loginUrl = '/buyer-family/login.html';
@@ -23,7 +44,8 @@
             try { return JSON.parse(load(USER_KEY)); } catch (e) { return null; }
         },
         save(token, user) { store(TOKEN_KEY, token); store(USER_KEY, JSON.stringify(user)); },
-        setUser(user) { store(USER_KEY, JSON.stringify(user)); },
+        // Chỉ cập nhật tab hiện tại, tránh ghi đè lần đăng nhập của tab khác
+        setUser(user) { setIn(sessionStorage, USER_KEY, JSON.stringify(user)); },
         clear() { store(TOKEN_KEY, null); store(USER_KEY, null); },
         logout() { CC.auth.clear(); location.href = CC.loginUrl; },
     };

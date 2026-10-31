@@ -13,9 +13,9 @@
         { label: 'Mua thuốc', desc: 'Thuốc không kê đơn, TPCN, thiết bị y tế quanh bạn', icon: 'cart', href: '', owner: 'TV2', ready: false },
         { label: 'Gửi đơn thuốc', desc: 'Chụp đơn, AI kiểm tra rồi gửi nhà thuốc báo giá', icon: 'file', href: '', owner: 'TV2', ready: false },
         { label: 'Khám bác sĩ online', desc: 'Chat, gọi video với bác sĩ từ 5.000đ', icon: 'video', href: '', owner: 'TV3', ready: false },
-        { label: 'Đặt lịch phòng khám', desc: 'Chọn phòng khám, ngày giờ cho mình hoặc bố mẹ', icon: 'calendar', href: '', owner: 'TV4', ready: false },
-        { label: 'Gia đình', desc: 'Liên kết bố mẹ, xem hồ sơ sức khỏe', icon: 'users', href: 'family.html', owner: 'TV1', ready: true },
-        { label: 'Lịch uống thuốc', desc: 'Nhắc giờ uống thuốc cho mình và bố mẹ', icon: 'clock', href: 'reminders.html', owner: 'TV1', ready: true },
+        { label: 'Đặt lịch phòng khám', desc: 'Chọn phòng khám, ngày giờ cho mình hoặc người thân', icon: 'calendar', href: '', owner: 'TV4', ready: false },
+        { label: 'Gia đình', desc: 'Liên kết với gia đình, xem hồ sơ sức khỏe', icon: 'users', href: 'family.html', owner: 'TV1', ready: true },
+        { label: 'Lịch uống thuốc', desc: 'Nhắc giờ uống thuốc cho mình và người thân', icon: 'clock', href: 'reminders.html', owner: 'TV1', ready: true },
     ];
     const user = await CC.layout.init({ active: 'home', title: 'Trang chủ' });
     if (!user) return;
@@ -131,8 +131,8 @@
                 ${fam.dependents.length ? `<div class="grid grid-2">${fam.dependents.map(memberCard).join('')}</div>` : `
                 <div class="card row">
                     ${CC.icon('users')}
-                    <p class="grow small">Liên kết với bố mẹ để cài lịch nhắc thuốc, đặt thuốc giao về nhà bố mẹ và nhận thông báo khi bố mẹ quên uống thuốc.</p>
-                    <a class="btn btn-sm btn-primary" href="family.html?tab=add">Liên kết</a>
+                    <p class="grow small">Liên kết với gia đình để cài lịch nhắc thuốc cho người thân, đặt thuốc giao tận nhà và nhận thông báo khi người thân quên uống thuốc.</p>
+                    <a class="btn btn-sm btn-primary" href="family.html?tab=add">Liên kết với gia đình</a>
                 </div>`}
 
                 ${mine.doses.length ? `
@@ -291,22 +291,22 @@
     }
 
     function openHelp() {
-        const reasons = ['Sắp hết thuốc huyết áp', 'Sắp hết thuốc tiểu đường', 'Cần mua thuốc cảm, hạ sốt', 'Con gọi lại cho bố/mẹ nhé'];
+        const reasons = ['Sắp hết thuốc huyết áp', 'Sắp hết thuốc tiểu đường', 'Cần mua thuốc cảm, hạ sốt', 'Gọi lại cho mình nhé'];
         const m = CC.modal(`
-            <div class="modal-head"><h2>Nhờ con mua thuốc</h2><button class="icon-btn" data-close>${CC.icon('x')}</button></div>
+            <div class="modal-head"><h2>Nhờ người nhà mua thuốc</h2><button class="icon-btn" data-close>${CC.icon('x')}</button></div>
             <div class="stack">
                 <div class="stack-sm">${reasons.map((r) => `<button class="btn btn-outline btn-block" data-reason="${CC.esc(r)}">${CC.esc(r)}</button>`).join('')}</div>
                 <div class="field">
                     <label for="help-msg">Hoặc nhập lời nhắn</label>
                     <textarea class="textarea" id="help-msg" placeholder="Ví dụ: Mẹ cần thêm thuốc bổ khớp"></textarea>
                 </div>
-                <button class="btn btn-primary btn-block" data-send>${CC.icon('send')} Gửi cho con</button>
+                <button class="btn btn-primary btn-block" data-send>${CC.icon('send')} Gửi cho người nhà</button>
             </div>`);
         const send = (message, button) =>
             CC.busy(button, async () => {
                 try {
                     await CC.api('/family/help-request', { method: 'POST', body: { message } });
-                    CC.toast('Đã gửi lời nhắn cho con', 'success');
+                    CC.toast('Đã gửi lời nhắn cho người nhà', 'success');
                     m.close();
                 } catch (err) {
                     CC.toast(err.message, 'error');

@@ -91,7 +91,7 @@ async function loadInvite(client, code, lock = false) {
     const invite = rows[0];
     if (!invite) throw new HttpError(404, 'Mã mời không đúng');
     if (invite.used_at) throw new HttpError(410, 'Mã mời này đã được sử dụng');
-    if (new Date(invite.expires_at) < new Date()) throw new HttpError(410, 'Mã mời đã hết hạn, hãy nhờ con tạo mã mới');
+    if (new Date(invite.expires_at) < new Date()) throw new HttpError(410, 'Mã mời đã hết hạn, hãy nhờ người thân tạo mã mới');
     return invite;
 }
 
@@ -116,7 +116,7 @@ router.post('/join', ah(async (req, res) => {
     const link = await db.withTransaction(async (client) => {
         const invite = await loadInvite(client, req.body.code, true);
         const caregiverId = Number(invite.caregiver_user_id);
-        if (caregiverId === me) throw new HttpError(400, 'Đây là mã do chính bạn tạo. Hãy mở mã này trên máy của bố mẹ.');
+        if (caregiverId === me) throw new HttpError(400, 'Đây là mã do chính bạn tạo. Hãy mở mã này trên máy của người thân.');
 
         const existing = await client.query(
             'SELECT id, status FROM family_links WHERE caregiver_user_id = $1 AND dependent_user_id = $2',
@@ -158,7 +158,7 @@ router.post('/links/by-phone', ah(async (req, res) => {
 
     const target = await db.query("SELECT id, full_name FROM users WHERE phone = $1 AND role = 'BUYER'", [phone]);
     if (!target.rows[0]) {
-        throw new HttpError(404, 'Chưa có tài khoản CareConnect với số này. Hãy đăng ký giúp bố mẹ rồi mời lại, hoặc dùng mã QR.');
+        throw new HttpError(404, 'Chưa có tài khoản CareConnect với số này. Hãy đăng ký giúp người thân rồi mời lại, hoặc dùng mã QR.');
     }
     const targetId = Number(target.rows[0].id);
     if (targetId === me) throw new HttpError(400, 'Không thể tự liên kết với chính mình');
@@ -186,7 +186,7 @@ router.post('/links/by-phone', ah(async (req, res) => {
     await notify(targetId, {
         type: 'SYSTEM',
         title: 'Lời mời liên kết gia đình',
-        body: `${await getUserName(me)} đã thêm bạn là "${relationship}" và muốn liên kết để chăm sóc sức khỏe từ xa. Vào mục Gia đình để đồng ý.`,
+        body: `${await getUserName(me)} mời bạn liên kết với gia đình (bạn là "${relationship}" của người này). Vào mục Gia đình để đồng ý.`,
         data: { kind: 'FAMILY_LINK_REQUEST', link_id: rows[0].id, from_user_id: me },
     });
     res.status(201).json({ link: rows[0] });
@@ -281,9 +281,9 @@ router.put('/members/:userId/health', ah(async (req, res) => {
 router.post('/help-request', ah(async (req, res) => {
     const me = req.user.id;
     const caregivers = await getActiveCaregivers(me);
-    if (!caregivers.length) throw new HttpError(400, 'Bạn chưa liên kết với con cái nào');
+    if (!caregivers.length) throw new HttpError(400, 'Bạn chưa có người thân nào đang chăm sóc');
     const { rows } = await db.query('SELECT full_name, phone FROM users WHERE id = $1', [me]);
-    const message = (req.body.message || '').trim().slice(0, 500) || 'Cần mua thêm thuốc, con liên hệ lại nhé.';
+    const message = (req.body.message || '').trim().slice(0, 500) || 'Mình cần mua thêm thuốc, liên hệ lại nhé.';
     for (const c of caregivers) {
         await notify(c.id, {
             type: 'SYSTEM',

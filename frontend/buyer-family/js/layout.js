@@ -113,7 +113,7 @@
                 try {
                     await CC.api(`/reminders/${d.reminder_id}/confirm`, { method: 'POST', body: { status: 'TAKEN' } });
                     await markRead(n);
-                    CC.toast('Đã ghi nhận. Con của bạn sẽ nhận được thông báo.', 'success');
+                    CC.toast('Đã ghi nhận uống thuốc. Người nhà đang chăm sóc bạn sẽ nhận được thông báo.', 'success');
                     window.dispatchEvent(new CustomEvent('cc:dose-updated'));
                     m.close();
                 } catch (err) {

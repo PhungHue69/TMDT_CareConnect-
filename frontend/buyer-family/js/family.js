@@ -23,7 +23,7 @@
             <div class="stack">
                 <div class="segmented">
                     <button data-tab="members" class="${tab === 'members' ? 'active' : ''}">Thành viên</button>
-                    <button data-tab="add" class="${tab === 'add' ? 'active' : ''}">Thêm thành viên</button>
+                    <button data-tab="add" class="${tab === 'add' ? 'active' : ''}">Liên kết với gia đình</button>
                 </div>
                 <div id="tab-body"></div>
             </div>`;
@@ -49,7 +49,7 @@
                             ${CC.avatar(l)}
                             <div class="grow">
                                 <div class="strong">${CC.esc(l.full_name)}</div>
-                                <div class="small muted">Muốn chăm sóc bạn với vai trò con · bạn là "${CC.esc(l.relationship)}"</div>
+                                <div class="small muted">Muốn liên kết với gia đình · bạn là "${CC.esc(l.relationship)}" của người này</div>
                             </div>
                         </div>
                         <div class="row" style="padding-bottom:12px">
@@ -70,6 +70,7 @@
                                 <div class="small muted">${CC.esc(d.phone)} · Hôm nay ${d.summary.taken}/${d.summary.total} liều${d.ui_mode === 'SIMPLE' ? ' · Giao diện đơn giản' : ''}</div>
                             </div>
                             <a class="btn btn-sm btn-outline" href="?member=${d.user_id}">Hồ sơ</a>
+                            <button class="btn btn-sm btn-ghost" data-unlink="${d.link_id}" data-name="${CC.esc(d.full_name)}" aria-label="Hủy liên kết">${CC.icon('x', 'icon-sm')}</button>
                         </div>`).join('')}
                     </div>
                 </section>` : ''}
@@ -82,7 +83,7 @@
                             ${CC.avatar(c)}
                             <div class="grow">
                                 <div class="strong">${CC.esc(c.full_name)}</div>
-                                <div class="small muted">Con · ${CC.esc(c.phone)}</div>
+                                <div class="small muted">Đang chăm sóc bạn · ${CC.esc(c.phone)}</div>
                             </div>
                             <a class="btn btn-sm btn-primary" href="tel:${CC.esc(c.phone)}">${CC.icon('phone', 'icon-sm')} Gọi</a>
                             <button class="btn btn-sm btn-ghost" data-unlink="${c.link_id}" data-name="${CC.esc(c.full_name)}" aria-label="Hủy liên kết">${CC.icon('x', 'icon-sm')}</button>
@@ -109,11 +110,11 @@
                 <div class="card empty">
                     ${CC.icon('users')}
                     <p>Chưa có thành viên nào. Mời người thân bằng mã QR, số điện thoại, hoặc nhập mã người thân gửi cho bạn.</p>
-                    <button class="btn btn-primary" data-goto-add>${CC.icon('plus')} Thêm thành viên</button>
+                    <button class="btn btn-primary" data-goto-add>${CC.icon('plus')} Liên kết với gia đình</button>
                 </div>` : ''}
             </div>`;
 
-        CC.$$('[data-accept]', body).forEach((b) => b.addEventListener('click', () => act(b, `/family/links/${b.dataset.accept}/accept`, 'POST', 'Đã liên kết với con')));
+        CC.$$('[data-accept]', body).forEach((b) => b.addEventListener('click', () => act(b, `/family/links/${b.dataset.accept}/accept`, 'POST', 'Đã liên kết với gia đình')));
         CC.$$('[data-reject]', body).forEach((b) => b.addEventListener('click', () => act(b, `/family/links/${b.dataset.reject}/reject`, 'POST', 'Đã từ chối lời mời')));
         CC.$$('[data-unlink]', body).forEach((b) => b.addEventListener('click', async () => {
             const pending = b.dataset.pending;
@@ -146,7 +147,7 @@
                 </div>
                 <form id="join-form" class="stack-sm">
                     <input class="input code-input" name="code" maxlength="6" autocomplete="off" placeholder="A1B2C3" required>
-                    <button class="btn btn-primary btn-block" type="submit">${CC.icon('check')} Liên kết</button>
+                    <button class="btn btn-primary btn-block" type="submit">${CC.icon('check')} Liên kết với gia đình</button>
                 </form>
                 <button class="btn btn-outline btn-block" id="scan-btn">${CC.icon('camera')} Quét mã QR</button>
                 <div id="qr-reader" hidden></div>
@@ -156,7 +157,7 @@
             <section class="card stack">
                 <div>
                     <h2>Mời bằng mã QR</h2>
-                    <p class="small muted">Tạo mã rồi đưa bố mẹ quét bằng camera, hoặc đọc 6 ký tự để bố mẹ nhập. Mã dùng được 24 giờ.</p>
+                    <p class="small muted">Tạo mã rồi đưa người thân quét bằng camera, hoặc đọc 6 ký tự để họ nhập. Mã dùng được 24 giờ.</p>
                 </div>
                 <form id="invite-form" class="row">
                     <select class="select grow" name="relationship" aria-label="Người được mời là gì của bạn">${relOptions()}</select>
@@ -169,11 +170,11 @@
             <section class="card stack">
                 <div>
                     <h2>Mời bằng số điện thoại</h2>
-                    <p class="small muted">Bố mẹ đã có tài khoản CareConnect sẽ nhận chuông báo và bấm "Đồng ý" trong mục Gia đình.</p>
+                    <p class="small muted">Người thân đã có tài khoản CareConnect sẽ nhận chuông báo và bấm "Đồng ý" trong mục Gia đình.</p>
                 </div>
                 <form id="phone-form" class="stack-sm">
                     <div class="field">
-                        <label for="invite-phone">Số điện thoại của bố mẹ</label>
+                        <label for="invite-phone">Số điện thoại của người thân</label>
                         <input class="input" id="invite-phone" name="phone" type="tel" inputmode="numeric" placeholder="0901234567" required>
                     </div>
                     <div class="field">
@@ -211,7 +212,7 @@
                 CC.busy(phoneForm.querySelector('[type=submit]'), async () => {
                     try {
                         await CC.api('/family/links/by-phone', { method: 'POST', body: CC.formData(phoneForm) });
-                        CC.toast('Đã gửi lời mời. Chờ bố mẹ đồng ý trên máy của mình.', 'success');
+                        CC.toast('Đã gửi lời mời. Chờ người thân đồng ý trên máy của họ.', 'success');
                         phoneForm.reset();
                     } catch (err) {
                         CC.toast(err.message, 'error');
@@ -235,7 +236,7 @@
                 </div>
                 <ol class="small muted" style="text-align:left;margin:0;padding-left:18px">
                     <li>Mở CareConnect trên điện thoại của ${CC.esc(invite.relationship.toLowerCase())}, đăng nhập.</li>
-                    <li>Vào <strong>Gia đình</strong> → <strong>Nhập mã của con</strong>.</li>
+                    <li>Vào <strong>Gia đình</strong> → <strong>Liên kết với gia đình</strong> → ô <strong>Nhập mã người thân gửi</strong>.</li>
                     <li>Quét mã QR này hoặc nhập 6 ký tự ở trên.</li>
                 </ol>
                 <button class="btn btn-sm btn-outline" id="copy-link">Sao chép link mời</button>
@@ -290,15 +291,15 @@
         } catch (err) {
             return CC.toast(err.message, 'error');
         }
-        if (invite.is_own) return CC.toast('Đây là mã bạn vừa tạo. Hãy mở mã này trên máy của bố mẹ.', 'error');
+        if (invite.is_own) return CC.toast('Đây là mã bạn vừa tạo. Hãy mở mã này trên máy của người thân.', 'error');
         const m = CC.modal(`
             <div class="stack center" style="align-items:center">
                 <span class="avatar avatar-lg">${CC.esc(CC.initials(invite.inviter_name))}</span>
                 <h2>${CC.esc(invite.inviter_name)}</h2>
                 <p class="muted">${CC.esc(invite.inviter_phone)}</p>
-                <p style="font-size:1.05rem">muốn liên kết với bạn với vai trò <strong>con</strong>.<br>Bạn là <strong>"${CC.esc(invite.relationship)}"</strong> của người này.</p>
-                <p class="small muted">Sau khi liên kết, con có thể cài lịch nhắc uống thuốc, đặt thuốc giao về nhà và nhận thông báo khi bạn uống thuốc.</p>
-                <button class="btn btn-primary btn-lg btn-block" data-join>${CC.icon('check')} Đồng ý liên kết</button>
+                <p style="font-size:1.05rem">mời bạn <strong>liên kết với gia đình</strong>.<br>Bạn là <strong>"${CC.esc(invite.relationship)}"</strong> của người này.</p>
+                <p class="small muted">Sau khi liên kết, người này có thể xem hồ sơ sức khỏe, cài lịch nhắc uống thuốc, đặt thuốc giao về nhà cho bạn và nhận thông báo khi bạn uống thuốc.</p>
+                <button class="btn btn-primary btn-lg btn-block" data-join>${CC.icon('check')} Đồng ý liên kết với gia đình</button>
                 <button class="btn btn-ghost btn-block" data-close>Để sau</button>
             </div>`);
         CC.$('[data-join]', m.el).addEventListener('click', (e) =>

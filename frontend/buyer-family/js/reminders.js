@@ -237,7 +237,7 @@
                 <div class="field">
                     <label for="pill_image_url">Link ảnh viên/vỉ thuốc (không bắt buộc)</label>
                     <input class="input" id="pill_image_url" name="pill_image_url" type="url" value="${CC.esc(r.pill_image_url || '')}" placeholder="https://...">
-                    <span class="hint">Ảnh giúp bố mẹ nhận ra đúng viên thuốc khi chuông reo.</span>
+                    <span class="hint">Ảnh giúp người uống nhận ra đúng viên thuốc khi chuông reo.</span>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-outline" data-close>Hủy</button>

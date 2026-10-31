@@ -92,7 +92,7 @@
                             </div>
                             <button class="btn btn-sm btn-ghost" data-edit-address="${a.id}" aria-label="Sửa">${CC.icon('edit', 'icon-sm')}</button>
                             <button class="btn btn-sm btn-ghost" data-delete-address="${a.id}" aria-label="Xóa" style="color:var(--danger)">${CC.icon('trash', 'icon-sm')}</button>
-                        </div>`).join('') : `<p class="muted">Chưa có địa chỉ. Thêm địa chỉ nhà mình hoặc nhà bố mẹ để đặt thuốc giao tận nơi.</p>`}
+                        </div>`).join('') : `<p class="muted">Chưa có địa chỉ. Thêm địa chỉ nhà mình hoặc nhà người thân để đặt thuốc giao tận nơi.</p>`}
                 </section>
 
                 <div class="grid grid-2">

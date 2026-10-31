@@ -14,7 +14,18 @@
     if (reg) reg.href += suffix;
     if (log) log.href += suffix;
 
-    if (CC.auth.token) location.replace(target);
+    // Đã có phiên đăng nhập: cho tiếp tục, hoặc đăng nhập tài khoản khác ngay trong tab này
+    // (tab khác vẫn giữ tài khoản của nó, tiện khi demo Con và Bố mẹ trên cùng máy)
+    const current = CC.auth.token && CC.auth.user;
+    const formEl = CC.$('#login-form') || CC.$('#register-form');
+    if (current && formEl) {
+        formEl.insertAdjacentHTML('beforebegin', `
+            <div class="card card-soft row" style="margin-bottom:16px">
+                ${CC.avatar(current)}
+                <div class="grow"><div class="small muted">Đang đăng nhập</div><div class="strong">${CC.esc(current.full_name)}</div></div>
+                <a class="btn btn-sm btn-primary" href="${CC.esc(target)}">Tiếp tục</a>
+            </div>`);
+    }
 
     function finish(data) {
         CC.auth.save(data.token, data.user);
