@@ -26,3 +26,7 @@ out/
 .idea/
 .DS_Store
 Thumbs.db
+
+# File upload tạm thời của người dùng
+frontend/uploads/storefront/*
+!frontend/uploads/storefront/.gitkeep

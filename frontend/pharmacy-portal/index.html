@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#1e6fd9">
+    <title>Tổng quan ca trực - CareConnect Pharmacy Portal</title>
+    <link rel="stylesheet" href="../shared/css/base.css">
+    <link rel="stylesheet" href="css/portal.css">
+</head>
+<body class="portal-body">
+    <!-- Sidebar cố định -->
+    <aside class="portal-sidebar" id="portal-sidebar"></aside>
+
+    <!-- Khung chính -->
+    <div class="portal-main-wrapper">
+        <header class="portal-topbar" id="portal-topbar"></header>
+
+        <main class="portal-content-body">
+            <!-- Banner chào ca trực -->
+            <div style="background:#ffffff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between">
+                <div>
+                    <h2 style="font-size:1.15rem;font-weight:700;color:var(--text);margin-bottom:4px">
+                        Chào Dược sĩ, chúc bạn một ca trực hiệu quả! 🩺
+                    </h2>
+                    <p class="muted small">
+                        Hệ thống tự động đồng bộ đơn thuốc từ Bác sĩ & Khách hàng gửi đến Nhà thuốc của bạn theo thời gian thực.
+                    </p>
+                </div>
+                <div style="display:flex;gap:10px">
+                    <a href="prescriptions.html" class="btn btn-primary btn-sm">📋 Xử lý đơn thuốc</a>
+                    <a href="inventory.html" class="btn btn-outline btn-sm">📦 Kiểm tra tồn kho</a>
+                </div>
+            </div>
+
+            <!-- Thống kê KPI -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-card-header">
+                        <span class="kpi-card-title">Đơn thuốc chờ báo giá</span>
+                        <span class="kpi-card-icon orange">📋</span>
+                    </div>
+                    <div class="kpi-card-value" id="kpi-pending-rx">-</div>
+                    <div class="kpi-card-footer">Yêu cầu khách hàng gửi tới</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-card-header">
+                        <span class="kpi-card-title">Đơn hàng cần chuẩn bị</span>
+                        <span class="kpi-card-icon blue">🛍️</span>
+                    </div>
+                    <div class="kpi-card-value" id="kpi-active-orders">-</div>
+                    <div class="kpi-card-footer">Đơn đã chốt cần đóng gói / giao</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-card-header">
+                        <span class="kpi-card-title">Doanh thu hôm nay</span>
+                        <span class="kpi-card-icon green">💰</span>
+                    </div>
+                    <div class="kpi-card-value" id="kpi-today-revenue">-</div>
+                    <div class="kpi-card-footer">Đã trừ hoa hồng sàn CareConnect</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-card-header">
+                        <span class="kpi-card-title">Cảnh báo kho hàng</span>
+                        <span class="kpi-card-icon red">⚠️</span>
+                    </div>
+                    <div class="kpi-card-value" id="kpi-inventory-alerts">-</div>
+                    <div class="kpi-card-footer" id="kpi-inventory-desc">0 hết hàng • 0 cận date</div>
+                </div>
+            </div>
+
+            <!-- Khối Bảng Danh sách gần đây -->
+            <div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(450px, 1fr));gap:24px">
+                <!-- Bảng Đơn thuốc mới -->
+                <div class="portal-card">
+                    <div class="portal-card-header">
+                        <h3 class="portal-card-title">Yêu cầu đơn thuốc mới</h3>
+                        <a href="prescriptions.html" class="small" style="font-weight:600">Xem tất cả →</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="portal-table">
+                            <thead>
+                                <tr>
+                                    <th>Mã yêu cầu</th>
+                                    <th>Khách hàng</th>
+                                    <th>Chẩn đoán</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-recent-rx">
+                                <tr><td colspan="5" class="center muted">Đang tải dữ liệu...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Bảng Đơn hàng gần đây -->
+                <div class="portal-card">
+                    <div class="portal-card-header">
+                        <h3 class="portal-card-title">Đơn hàng bán ra gần đây</h3>
+                        <a href="orders.html" class="small" style="font-weight:600">Xem tất cả →</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="portal-table">
+                            <thead>
+                                <tr>
+                                    <th>Mã đơn</th>
+                                    <th>Người nhận</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-recent-orders">
+                                <tr><td colspan="4" class="center muted">Đang tải dữ liệu...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../shared/js/api.js"></script>
+    <script src="../shared/js/realtime.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

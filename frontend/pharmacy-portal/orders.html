@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#1e6fd9">
+    <title>Quản lý Đơn hàng bán ra & Giao vận - CareConnect Pharmacy Portal</title>
+    <link rel="stylesheet" href="../shared/css/base.css">
+    <link rel="stylesheet" href="css/portal.css">
+    <style>
+        .order-tab-nav {
+            display: flex;
+            gap: 8px;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        .order-tab-item {
+            padding: 10px 18px;
+            font-weight: 600;
+            font-size: 0.92rem;
+            color: var(--muted);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+        }
+        .order-tab-item:hover {
+            color: var(--primary);
+        }
+        .order-tab-item.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            font-weight: 700;
+        }
+        .family-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #fdf2f8;
+            color: #be185d;
+            border: 1px solid #fbcfe8;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .timeline {
+            position: relative;
+            padding-left: 24px;
+            margin: 16px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 6px;
+            bottom: 6px;
+            width: 2px;
+            background: #e2e8f0;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: -24px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #94a3b8;
+            border: 3px solid #ffffff;
+            box-shadow: 0 0 0 1px #cbd5e1;
+        }
+        .timeline-item.active .timeline-dot {
+            background: var(--primary);
+            box-shadow: 0 0 0 2px rgba(30, 111, 217, 0.3);
+        }
+        .timeline-item.success .timeline-dot {
+            background: var(--success);
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+        }
+        .timeline-title {
+            font-weight: 600;
+            font-size: 0.88rem;
+            color: #1e293b;
+        }
+        .timeline-time {
+            font-size: 0.78rem;
+            color: #64748b;
+        }
+        .timeline-desc {
+            font-size: 0.82rem;
+            color: #475569;
+            margin-top: 2px;
+        }
+        .shipping-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius);
+            padding: 14px;
+            margin-top: 14px;
+        }
+        .driver-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #e0f2fe;
+            color: #0369a1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* Modal Backdrop và Content nổi lên trên toàn bộ Sidebar và Topbar */
+        .portal-modal-backdrop {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: rgba(15, 23, 42, 0.65) !important;
+            backdrop-filter: blur(4px);
+            z-index: 99999 !important;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .portal-modal-content {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+            width: 100%;
+            max-width: 960px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            z-index: 100000;
+            animation: modal-zoom-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes modal-zoom-in {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .portal-modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            background: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .portal-modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .portal-modal-footer {
+            padding: 14px 20px;
+            border-top: 1px solid var(--border);
+            background: #f8fafc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Khung in phiếu xuất kho chuẩn GPP */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #print-slip-area, #print-slip-area * {
+                visibility: visible;
+            }
+            #print-slip-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: #ffffff !important;
+                padding: 20px;
+                color: #000000 !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="portal-body">
+    <!-- Sidebar -->
+    <aside class="portal-sidebar" id="portal-sidebar"></aside>
+
+    <!-- Khung chính -->
+    <div class="portal-main-wrapper">
+        <header class="portal-topbar" id="portal-topbar"></header>
+
+        <main class="portal-content-body">
+            <!-- Header trang -->
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+                <div>
+                    <h2 style="font-size:1.3rem;font-weight:700;margin:0">Quản lý Đơn hàng bán ra & Giao vận</h2>
+                    <p class="muted small" style="margin-top:2px">Xác nhận đơn, nhặt thuốc chuẩn bị đóng gói, bàn giao đối tác giao vận (Ahamove/Grab) và đối soát tiền về ví</p>
+                </div>
+                <div style="display:flex;gap:10px">
+                    <button class="btn btn-outline" id="btn-refresh" title="Tải lại danh sách đơn">
+                        🔄 Tải lại
+                    </button>
+                    <button class="btn btn-primary" id="btn-mock-seed" title="Tạo 4 đơn hàng mẫu đa dạng trạng thái để kiểm thử nhanh">
+                        🧪 Tạo đơn hàng mẫu demo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Thống kê nhanh KPI (4 thẻ) -->
+            <div class="kpi-grid" style="margin-bottom:20px">
+                <div class="kpi-card">
+                    <div class="kpi-title">Tổng đơn hàng</div>
+                    <div class="kpi-value" id="kpi-total-orders">0</div>
+                    <div class="kpi-desc">Tổng số đơn bán của nhà thuốc</div>
+                </div>
+                <div class="kpi-card" style="border-left: 4px solid #f59e0b">
+                    <div class="kpi-title">Chờ xác nhận & chuẩn bị</div>
+                    <div class="kpi-value" id="kpi-pending-orders" style="color:#d97706">0</div>
+                    <div class="kpi-desc">Cần dược sĩ nhặt thuốc đóng gói</div>
+                </div>
+                <div class="kpi-card" style="border-left: 4px solid var(--primary)">
+                    <div class="kpi-title">Đang giao hàng</div>
+                    <div class="kpi-value" id="kpi-shipping-orders" style="color:var(--primary)">0</div>
+                    <div class="kpi-desc">Shipper đang trên đường giao</div>
+                </div>
+                <div class="kpi-card" style="border-left: 4px solid var(--success)">
+                    <div class="kpi-title">Doanh thu hôm nay</div>
+                    <div class="kpi-value" id="kpi-today-revenue" style="color:var(--success)">0 đ</div>
+                    <div class="kpi-desc">Thực nhận sau trừ chiết khấu sàn</div>
+                </div>
+            </div>
+
+            <!-- Thanh Tabs lọc trạng thái -->
+            <div class="order-tab-nav">
+                <div class="order-tab-item active" data-status="ALL">
+                    Tất cả <span class="badge badge-neutral" id="tab-badge-all">0</span>
+                </div>
+                <div class="order-tab-item" data-status="PENDING_CONFIRM">
+                    Chờ xác nhận <span class="badge badge-warning" id="tab-badge-pending">0</span>
+                </div>
+                <div class="order-tab-item" data-status="PREPARING">
+                    Đang chuẩn bị thuốc <span class="badge badge-info" id="tab-badge-preparing">0</span>
+                </div>
+                <div class="order-tab-item" data-status="SHIPPING">
+                    Đang giao hàng <span class="badge badge-info" id="tab-badge-shipping">0</span>
+                </div>
+                <div class="order-tab-item" data-status="COMPLETED">
+                    Đã hoàn thành <span class="badge badge-success" id="tab-badge-completed">0</span>
+                </div>
+                <div class="order-tab-item" data-status="CANCELLED">
+                    Đã hủy / Hoàn hàng <span class="badge badge-neutral" id="tab-badge-cancelled">0</span>
+                </div>
+            </div>
+
+            <!-- Thanh công cụ tìm kiếm -->
+            <div class="portal-card" style="margin-bottom:20px;padding:14px 20px">
+                <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+                    <div style="flex:1;min-width:260px;position:relative">
+                        <input type="text" id="filter-search" class="form-control" placeholder="🔍 Tìm theo mã đơn #CC-ORD, tên người nhận, số điện thoại..." style="padding-left:14px">
+                    </div>
+                    <button class="btn btn-outline" id="btn-clear-search">Xóa lọc</button>
+                </div>
+            </div>
+
+            <!-- Bảng danh sách đơn hàng -->
+            <div class="portal-card" style="padding:0;overflow:hidden">
+                <div class="table-responsive">
+                    <table class="data-table" id="orders-table">
+                        <thead>
+                            <tr>
+                                <th style="width:140px">Mã đơn hàng</th>
+                                <th style="width:130px">Thời gian</th>
+                                <th>Người nhận & Điểm giao</th>
+                                <th style="width:140px">Nguồn đơn</th>
+                                <th style="width:140px">Thanh toán</th>
+                                <th style="width:150px">Trạng thái đơn</th>
+                                <th style="width:170px;text-align:right">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-tbody">
+                            <tr>
+                                <td colspan="7" class="text-center" style="padding:40px;color:var(--muted)">
+                                    Đang tải danh sách đơn hàng...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Phân trang -->
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-top:1px solid var(--border);flex-wrap:wrap;gap:10px">
+                    <div class="small muted" id="orders-pagination-info">Hiển thị 0 đơn hàng</div>
+                    <div style="display:flex;gap:6px" id="orders-pagination-btns"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ================= MODAL: CHI TIẾT ĐƠN HÀNG & XỬ LÝ GIAO VẬN ================= -->
+    <div class="portal-modal-backdrop" id="modal-order-detail" style="display:none">
+        <div class="portal-modal-content" style="max-width:960px;max-height:90vh;display:flex;flex-direction:column">
+            <div class="portal-modal-header" style="display:flex;justify-content:space-between;align-items:center">
+                <div>
+                    <h3 style="margin:0;font-size:1.15rem;display:flex;align-items:center;gap:10px">
+                        <span>Chi tiết đơn hàng</span>
+                        <span id="modal-order-code" style="color:var(--primary);font-family:monospace">#CC-ORD</span>
+                    </h3>
+                    <div class="small muted" id="modal-order-date" style="margin-top:2px">Thời gian đặt: --</div>
+                </div>
+                <button type="button" class="btn btn-outline small" id="btn-close-modal" style="padding:4px 10px">&times;</button>
+            </div>
+
+            <div class="portal-modal-body" style="flex:1;overflow-y:auto;padding:20px">
+                <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:24px">
+                    <!-- Cột trái: Thông tin thuốc & Khách hàng -->
+                    <div>
+                        <!-- Thẻ thông tin người nhận O2O CareConnect -->
+                        <div class="portal-card" style="padding:16px;margin-bottom:16px;background:#f8fafc">
+                            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+                                <div style="font-weight:700;font-size:0.95rem;color:#1e293b">📍 Thông tin giao thuốc</div>
+                                <div id="modal-family-tag"></div>
+                            </div>
+                            <div style="font-size:0.9rem;line-height:1.6">
+                                <div><strong>Người nhận:</strong> <span id="modal-recipient-name">--</span> (<a href="#" id="modal-recipient-phone" style="color:var(--primary);font-weight:600">--</a>)</div>
+                                <div><strong>Địa chỉ:</strong> <span id="modal-shipping-address">--</span></div>
+                                <div id="modal-buyer-box" style="margin-top:6px;padding-top:6px;border-top:1px dashed #cbd5e1;font-size:0.85rem;color:#475569">
+                                    <strong>Người đặt (Người trả tiền):</strong> <span id="modal-buyer-name">--</span> - <span id="modal-buyer-phone">--</span>
+                                </div>
+                                <div id="modal-customer-note" style="margin-top:6px;padding:8px 10px;background:#fff;border-radius:6px;border:1px solid #e2e8f0;font-style:italic;color:#334155">
+                                    💬 Lời dặn: <span id="modal-note-text">Không có</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Danh sách thuốc cần chuẩn bị trên kệ -->
+                        <div class="portal-card" style="padding:16px;margin-bottom:16px">
+                            <div style="font-weight:700;font-size:0.95rem;color:#1e293b;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between">
+                                <span>💊 Danh mục thuốc đóng gói</span>
+                                <span class="badge badge-neutral" id="modal-item-count">0 món</span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="data-table" style="font-size:0.88rem">
+                                    <thead>
+                                        <tr style="background:#f1f5f9">
+                                            <th>Tên thuốc & Hoạt chất</th>
+                                            <th style="width:90px;text-align:center">Vị trí kệ</th>
+                                            <th style="width:60px;text-align:center">SL</th>
+                                            <th style="width:95px;text-align:right">Đơn giá</th>
+                                            <th style="width:105px;text-align:right">Thành tiền</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="modal-items-tbody"></tbody>
+                                </table>
+                            </div>
+
+                            <!-- Tổng kết chi phí & Thực nhận -->
+                            <div style="margin-top:14px;padding-top:12px;border-top:1px solid #e2e8f0;display:flex;flex-direction:column;gap:6px;font-size:0.88rem">
+                                <div style="display:flex;justify-content:space-between">
+                                    <span class="muted">Tiền thuốc (Subtotal):</span>
+                                    <strong id="modal-subtotal-val">0 đ</strong>
+                                </div>
+                                <div style="display:flex;justify-content:space-between">
+                                    <span class="muted">Phí giao hàng:</span>
+                                    <span id="modal-shipping-fee-val">0 đ</span>
+                                </div>
+                                <div style="display:flex;justify-content:space-between;color:#dc2626">
+                                    <span>Chiết khấu sàn CareConnect:</span>
+                                    <span id="modal-commission-val">-0 đ</span>
+                                </div>
+                                <div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px dashed #cbd5e1;font-size:1rem;color:var(--success)">
+                                    <strong>Nhà thuốc thực nhận:</strong>
+                                    <strong id="modal-net-payout-val" style="font-size:1.15rem">0 đ</strong>
+                                </div>
+                                <div style="margin-top:6px;padding:8px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;font-size:0.75rem;color:#64748b;line-height:1.4">
+                                    💼 <strong>Dòng tiền Escrow:</strong> Tiền tạm giữ tại sàn. Sau khi giao thành công (hoặc 24h không khiếu nại), hệ thống tự động khấu trừ hoa hồng (5% RX / 10% TPCN) và giải phóng <strong>Thực nhận</strong> vào Ví nhà thuốc. Phí vận chuyển do sàn và tài xế quyết toán riêng.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cột phải: Tiến trình, Vận chuyển & Thao tác chuyển trạng thái -->
+                    <div>
+                        <!-- Thao tác chuyển trạng thái (Action Box) -->
+                        <div class="portal-card" style="padding:16px;margin-bottom:16px;border-top:4px solid var(--primary)">
+                            <div style="font-weight:700;font-size:0.95rem;color:#1e293b;margin-bottom:8px">⚡ Thao tác xử lý đơn</div>
+                            <div id="modal-action-box">
+                                <!-- Render động theo trạng thái đơn -->
+                            </div>
+                        </div>
+
+                        <!-- Thông tin Giao vận / Shipper -->
+                        <div class="portal-card" style="padding:16px;margin-bottom:16px">
+                            <div style="font-weight:700;font-size:0.95rem;color:#1e293b;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">
+                                <span>🛵 Đơn vị vận chuyển</span>
+                                <span class="badge badge-info" id="modal-shipment-provider">AHAMOVE</span>
+                            </div>
+                            <div id="modal-shipment-content">
+                                <div class="small muted">Chưa gán tài xế giao hàng</div>
+                            </div>
+                        </div>
+
+                        <!-- Nhật ký trạng thái (Timeline) -->
+                        <div class="portal-card" style="padding:16px">
+                            <div style="font-weight:700;font-size:0.95rem;color:#1e293b;margin-bottom:8px">📜 Lịch sử tiến trình</div>
+                            <div class="timeline" id="modal-timeline"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portal-modal-footer" style="padding:12px 20px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);background:#f8fafc">
+                <button type="button" class="btn btn-outline" id="btn-print-order">
+                    🖨️ In phiếu xuất kho GPP
+                </button>
+                <button type="button" class="btn btn-secondary" id="btn-close-modal-bottom">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= KHU VỰC IN PHIẾU XUẤT KHO CHUẨN GPP ================= -->
+    <div id="print-slip-area" style="display:none">
+        <div style="max-width:750px;margin:0 auto;font-family:sans-serif;color:#1e293b;padding:20px;line-height:1.5">
+            <div style="display:flex;justify-content:space-between;border-bottom:2px solid #0f172a;padding-bottom:12px;margin-bottom:16px">
+                <div>
+                    <h2 style="margin:0;font-size:1.3rem;text-transform:uppercase" id="print-pharmacy-name">NHÀ THUỐC ĐẠT CHUẨN GPP</h2>
+                    <div style="font-size:0.85rem;margin-top:4px" id="print-pharmacy-address">Địa chỉ: --</div>
+                    <div style="font-size:0.85rem">Hotline: <span id="print-pharmacy-phone">--</span></div>
+                </div>
+                <div style="text-align:right">
+                    <div style="font-weight:700;font-size:1.1rem;color:#1e6fd9">CARECONNECT O2O</div>
+                    <div style="font-size:0.85rem;font-family:monospace;margin-top:4px" id="print-order-code">#CC-ORD</div>
+                    <div style="font-size:0.8rem;color:#64748b" id="print-order-time">Ngày: --</div>
+                </div>
+            </div>
+
+            <div style="text-align:center;margin-bottom:20px">
+                <h1 style="margin:0;font-size:1.5rem;text-transform:uppercase;letter-spacing:1px">PHIẾU XUẤT KHO KIÊM BÁN LẺ THUỐC</h1>
+                <div style="font-size:0.85rem;color:#64748b;font-style:italic">(Theo quy chế thực hành tốt nhà thuốc - GPP Bộ Y Tế)</div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:0.9rem;margin-bottom:16px;background:#f8fafc;padding:12px;border-radius:6px">
+                <div>
+                    <div><strong>Người nhận thuốc:</strong> <span id="print-recipient-name">--</span></div>
+                    <div><strong>Điện thoại:</strong> <span id="print-recipient-phone">--</span></div>
+                    <div><strong>Địa chỉ giao:</strong> <span id="print-shipping-address">--</span></div>
+                </div>
+                <div>
+                    <div><strong>Người đặt mua:</strong> <span id="print-buyer-name">--</span></div>
+                    <div><strong>Hình thức thanh toán:</strong> <span id="print-payment-method">--</span></div>
+                    <div><strong>Ghi chú:</strong> <span id="print-note">--</span></div>
+                </div>
+            </div>
+
+            <table style="width:100%;border-collapse:collapse;font-size:0.88rem;margin-bottom:16px">
+                <thead>
+                    <tr style="background:#e2e8f0;border-top:1px solid #94a3b8;border-bottom:1px solid #94a3b8">
+                        <th style="padding:8px 6px;text-align:center;width:35px">STT</th>
+                        <th style="padding:8px;text-align:left">Tên thuốc, Hàm lượng, Dạng bào chế</th>
+                        <th style="padding:8px;text-align:center;width:70px">ĐVT</th>
+                        <th style="padding:8px;text-align:center;width:55px">SL</th>
+                        <th style="padding:8px;text-align:right;width:95px">Đơn giá</th>
+                        <th style="padding:8px;text-align:right;width:110px">Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody id="print-items-tbody"></tbody>
+                <tfoot>
+                    <tr style="border-top:1px solid #94a3b8">
+                        <td colspan="5" style="padding:8px;text-align:right;font-weight:700">Tổng tiền thuốc:</td>
+                        <td style="padding:8px;text-align:right;font-weight:700" id="print-subtotal">0 đ</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" style="padding:6px 8px;text-align:right">Cước vận chuyển:</td>
+                        <td style="padding:6px 8px;text-align:right" id="print-shipping-fee">0 đ</td>
+                    </tr>
+                    <tr style="border-top:2px solid #0f172a;font-size:1rem">
+                        <td colspan="5" style="padding:8px;text-align:right;font-weight:700">TỔNG CỘNG THANH TOÁN:</td>
+                        <td style="padding:8px;text-align:right;font-weight:700;color:#1e6fd9" id="print-total">0 đ</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div style="font-size:0.82rem;font-style:italic;margin-bottom:24px;border-left:3px solid #1e6fd9;padding-left:10px">
+                * Dược sĩ tư vấn: Uống thuốc theo đúng chỉ dẫn của bác sĩ hoặc hướng dẫn kẹp kèm. Bảo quản nơi khô ráo, tránh ánh sáng trực tiếp. Để xa tầm tay trẻ em.
+            </div>
+
+            <div style="display:flex;justify-content:space-between;text-align:center;margin-top:30px;font-size:0.9rem">
+                <div style="width:200px">
+                    <strong>Người nhận hàng</strong>
+                    <div style="font-size:0.8rem;color:#64748b">(Ký và ghi rõ họ tên)</div>
+                    <div style="height:60px"></div>
+                </div>
+                <div style="width:200px">
+                    <strong>Nhân viên giao vận</strong>
+                    <div style="font-size:0.8rem;color:#64748b">(Ký và ghi rõ họ tên)</div>
+                    <div style="height:60px"></div>
+                </div>
+                <div style="width:220px">
+                    <strong>Dược sĩ phụ trách GPP</strong>
+                    <div style="font-size:0.8rem;color:#64748b">(Ký và đóng dấu chuyên môn)</div>
+                    <div style="height:60px"></div>
+                    <div style="font-weight:600" id="print-pharmacist-name">DS. Đỗ Minh Tâm</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts dùng chung -->
+    <script src="../shared/js/api.js"></script>
+    <script src="../shared/js/realtime.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/orders.js"></script>
+</body>
+</html>
