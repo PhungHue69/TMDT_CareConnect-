@@ -88,7 +88,7 @@
 
         <main class="portal-content-body">
             <!-- Header tiêu đề trang -->
-            <div style="background:#ffffff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+            <div class="page-header-box" style="background:#ffffff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
                 <div>
                     <h2 style="font-size:1.25rem;font-weight:800;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:8px">
                         <span>💰</span> Ví & Quản lý Doanh thu Nhà thuốc
@@ -97,7 +97,7 @@
                         Theo dõi số dư khả dụng, tiền ký quỹ Escrow bảo đảm, lịch sử đối soát chi tiết và tạo yêu cầu rút tiền về tài khoản ngân hàng.
                     </p>
                 </div>
-                <div style="display:flex;gap:10px;align-items:center">
+                <div class="header-buttons" style="display:flex;gap:10px;align-items:center">
                     <button type="button" class="btn btn-outline btn-sm" id="btn-seed-wallet" title="Nạp thử số dư và tạo giao dịch demo">
                         ⚡ Dữ liệu mẫu demo
                     </button>
@@ -266,7 +266,7 @@
                         </select>
                     </div>
 
-                    <div class="grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                    <div class="form-row-2">
                         <div class="field">
                             <label class="form-label" style="font-weight:700;font-size:0.88rem">Số tài khoản <span style="color:#dc2626">*</span></label>
                             <input type="text" id="payout-acc-number" class="form-control" placeholder="Số tài khoản ngân hàng" value="0011001234567" required style="font-family:monospace;font-weight:700">

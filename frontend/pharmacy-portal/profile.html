@@ -18,7 +18,7 @@
 
         <main class="portal-content-body">
             <!-- Header tiêu đề trang -->
-            <div style="background:#ffffff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+            <div class="page-header-box" style="background:#ffffff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
                 <div>
                     <h2 style="font-size:1.25rem;font-weight:800;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:8px">
                         <span>🏪</span> Hồ sơ & Thông tin Nhà thuốc
@@ -27,7 +27,7 @@
                         Quản lý thông tin pháp lý chuẩn GPP, dược sĩ phụ trách chuyên môn và tọa độ GPS phục vụ điều phối đơn hàng O2O.
                     </p>
                 </div>
-                <div style="display:flex;gap:10px;align-items:center">
+                <div class="header-buttons" style="display:flex;gap:10px;align-items:center">
                     <button type="submit" form="form-pharmacy-profile" class="btn btn-primary" id="btn-save-profile">
                         💾 Lưu thay đổi
                     </button>
@@ -35,7 +35,7 @@
             </div>
 
             <!-- Bố cục 2 cột -->
-            <div class="grid" style="display:grid;grid-template-columns:1.4fr 1fr;gap:24px;align-items:start">
+            <div class="profile-layout-grid">
                 <!-- Cột trái: Form chỉnh sửa -->
                 <form id="form-pharmacy-profile" class="portal-card" style="padding:22px;margin:0">
                     <h3 style="font-size:1.05rem;font-weight:700;color:var(--primary-dark);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)">
@@ -47,7 +47,7 @@
                         <input type="text" id="prof-pharmacy-name" class="form-control" required style="font-weight:700;font-size:1rem;color:#0f172a">
                     </div>
 
-                    <div class="grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+                    <div class="form-row-2">
                         <div class="field">
                             <label class="form-label" style="font-weight:700">Số chứng chỉ GPP <span style="color:#dc2626">*</span></label>
                             <input type="text" id="prof-gpp-cert" class="form-control" placeholder="GPP-HN-12345" required style="font-family:monospace;font-weight:700">
@@ -58,7 +58,7 @@
                         </div>
                     </div>
 
-                    <div class="grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+                    <div class="form-row-2">
                         <div class="field">
                             <label class="form-label" style="font-weight:700">Hotline Nhà thuốc</label>
                             <input type="text" id="prof-pharmacy-phone" class="form-control" placeholder="024-3888-9999">
@@ -79,7 +79,7 @@
                         <input type="text" id="prof-pharmacy-address" class="form-control" required placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố">
                     </div>
 
-                    <div class="grid" style="display:grid;grid-template-columns:1fr 1fr 120px;gap:12px;align-items:end">
+                    <div class="form-row-gps">
                         <div class="field" style="margin-bottom:0">
                             <label class="form-label" style="font-weight:700">Vĩ độ (Latitude)</label>
                             <input type="number" step="0.00000001" id="prof-lat" class="form-control" placeholder="21.028511">
@@ -100,7 +100,7 @@
                         🩺 Dược sĩ phụ trách chuyên môn
                     </h3>
 
-                    <div class="grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+                    <div class="form-row-2">
                         <div class="field">
                             <label class="form-label" style="font-weight:700">Họ và tên Dược sĩ <span style="color:#dc2626">*</span></label>
                             <input type="text" id="prof-pharmacist-name" class="form-control" required style="font-weight:600">

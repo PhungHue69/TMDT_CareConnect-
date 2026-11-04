@@ -77,12 +77,12 @@
 
         <main class="portal-content-body">
             <!-- Tiêu đề trang & Nút hành động -->
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+            <div class="page-header-box" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
                 <div>
                     <h2 style="font-size:1.3rem;font-weight:700;margin:0">Quản lý kho thuốc & Giá bán</h2>
                     <p class="muted small" style="margin-top:2px">Quản lý định mức tồn kho, cập nhật giá bán niêm yết và hạn sử dụng</p>
                 </div>
-                <div>
+                <div class="header-buttons">
                     <button class="btn btn-primary" id="btn-add-drug">
                         + Thêm thuốc vào kho
                     </button>
@@ -90,7 +90,7 @@
             </div>
 
             <!-- Thống kê kho mini -->
-            <div class="kpi-grid" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;margin-bottom:20px">
+            <div class="kpi-grid" style="margin-bottom:20px">
                 <div class="kpi-card clickable-card" id="card-filter-all">
                     <span class="kpi-card-title">Tổng mặt hàng</span>
                     <div class="kpi-card-value" id="stat-total">-</div>

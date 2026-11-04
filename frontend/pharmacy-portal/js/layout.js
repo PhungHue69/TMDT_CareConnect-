@@ -46,6 +46,7 @@
                         <h1>CareConnect</h1>
                         <span>Pharmacy Portal</span>
                     </div>
+                    <button type="button" class="btn-sidebar-close" id="btn-close-sidebar" aria-label="Đóng menu">✕</button>
                 </div>
                 <nav class="portal-nav">
                     <div class="portal-nav-group-title">Nghiệp vụ Nhà thuốc</div>
@@ -89,16 +90,23 @@
         if (topbarEl) {
             topbarEl.innerHTML = `
                 <div class="topbar-left">
-                    <h2 class="topbar-page-title">${CC.esc(pageTitle || 'Cổng Nhà thuốc')}</h2>
-                    ${p.is_pro_seller ? '<span class="badge badge-pro">⭐ ĐỐI TÁC PRO</span>' : ''}
-                    <span class="badge badge-success">✓ Chuẩn ${CC.esc(p.gpp_certificate || 'GPP')}</span>
+                    <button type="button" class="btn-sidebar-toggle" id="btn-toggle-sidebar" aria-label="Mở menu">
+                        <span>☰</span>
+                    </button>
+                    <div class="topbar-title-group">
+                        <h2 class="topbar-page-title">${CC.esc(pageTitle || 'Cổng Nhà thuốc')}</h2>
+                        <div class="topbar-badges">
+                            ${p.is_pro_seller ? '<span class="badge badge-pro">⭐ PRO</span>' : ''}
+                            <span class="badge badge-success">✓ ${CC.esc(p.gpp_certificate || 'GPP')}</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="topbar-right">
-                    <button class="btn btn-outline btn-sm" id="btn-portal-refresh" title="Tải lại dữ liệu">
-                        🔄 Làm mới
+                    <button class="btn btn-outline btn-sm topbar-btn" id="btn-portal-refresh" title="Tải lại dữ liệu">
+                        <span class="btn-icon">🔄</span> <span class="btn-text">Làm mới</span>
                     </button>
-                    <button class="btn btn-outline btn-sm" id="btn-portal-logout" style="color:var(--danger)">
-                        🚪 Đăng xuất
+                    <button class="btn btn-outline btn-sm topbar-btn" id="btn-portal-logout" style="color:var(--danger)" title="Đăng xuất">
+                        <span class="btn-icon">🚪</span> <span class="btn-text">Đăng xuất</span>
                     </button>
                 </div>
             `;
@@ -115,19 +123,97 @@
             });
         }
 
-        // Cập nhật số đếm badge thông báo trên Sidebar
+        // Tạo backdrop cho mobile drawer nếu chưa có
+        let backdropEl = CC.$('#portal-sidebar-backdrop');
+        if (!backdropEl) {
+            backdropEl = document.createElement('div');
+            backdropEl.id = 'portal-sidebar-backdrop';
+            backdropEl.className = 'portal-sidebar-backdrop';
+            document.body.appendChild(backdropEl);
+        }
+
+        const toggleSidebar = (forceState) => {
+            const sidebar = CC.$('#portal-sidebar');
+            if (!sidebar) return;
+            const isOpen = typeof forceState === 'boolean' ? forceState : !sidebar.classList.contains('open');
+            if (isOpen) {
+                sidebar.classList.add('open');
+                backdropEl.classList.add('active');
+                document.body.classList.add('sidebar-drawer-open');
+            } else {
+                sidebar.classList.remove('open');
+                backdropEl.classList.remove('active');
+                document.body.classList.remove('sidebar-drawer-open');
+            }
+        };
+
+        const toggleBtn = CC.$('#btn-toggle-sidebar');
+        if (toggleBtn) toggleBtn.addEventListener('click', () => toggleSidebar());
+
+        const closeBtn = CC.$('#btn-close-sidebar');
+        if (closeBtn) closeBtn.addEventListener('click', () => toggleSidebar(false));
+
+        backdropEl.addEventListener('click', () => toggleSidebar(false));
+
+        // Tự động đóng sidebar khi chuyển trang trên thiết bị di động
+        document.querySelectorAll('.portal-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 900) toggleSidebar(false);
+            });
+        });
+
+        // Tạo Mobile Bottom Navigation Bar (thanh điều hướng đáy tiện dụng cho smartphone)
+        let bottomNav = CC.$('#portal-bottom-nav');
+        if (!bottomNav) {
+            bottomNav = document.createElement('nav');
+            bottomNav.id = 'portal-bottom-nav';
+            bottomNav.className = 'portal-bottom-nav';
+            bottomNav.innerHTML = `
+                <a href="index.html" class="bottom-nav-item ${activeNavKey === 'dashboard' ? 'active' : ''}">
+                    <span class="bottom-nav-icon">📊</span>
+                    <span class="bottom-nav-label">Tổng quan</span>
+                </a>
+                <a href="prescriptions.html" class="bottom-nav-item ${activeNavKey === 'prescriptions' ? 'active' : ''}">
+                    <span class="bottom-nav-icon">📋</span>
+                    <span class="bottom-nav-label">Đơn thuốc</span>
+                    <span class="bottom-nav-badge" id="bottom-badge-rx" style="display:none">0</span>
+                </a>
+                <a href="inventory.html" class="bottom-nav-item ${activeNavKey === 'inventory' ? 'active' : ''}">
+                    <span class="bottom-nav-icon">📦</span>
+                    <span class="bottom-nav-label">Kho thuốc</span>
+                </a>
+                <a href="orders.html" class="bottom-nav-item ${activeNavKey === 'orders' ? 'active' : ''}">
+                    <span class="bottom-nav-icon">🛍️</span>
+                    <span class="bottom-nav-label">Đơn hàng</span>
+                    <span class="bottom-nav-badge" id="bottom-badge-orders" style="display:none">0</span>
+                </a>
+                <a href="wallet.html" class="bottom-nav-item ${activeNavKey === 'wallet' ? 'active' : ''}">
+                    <span class="bottom-nav-icon">💰</span>
+                    <span class="bottom-nav-label">Ví & Tiền</span>
+                </a>
+            `;
+            document.body.appendChild(bottomNav);
+        }
+
+        // Cập nhật số đếm badge thông báo trên Sidebar & Mobile Bottom Bar
         try {
             const dashRes = await CC.api('/pharmacy/dashboard');
             if (dashRes && dashRes.stats) {
+                const rxCount = dashRes.stats.pending_prescriptions || 0;
+                const ordersCount = dashRes.stats.active_orders || 0;
+
                 const rxBadge = CC.$('#badge-rx-count');
-                if (rxBadge && dashRes.stats.pending_prescriptions > 0) {
-                    rxBadge.textContent = dashRes.stats.pending_prescriptions;
-                    rxBadge.style.display = 'inline-block';
+                const bottomRxBadge = CC.$('#bottom-badge-rx');
+                if (rxCount > 0) {
+                    if (rxBadge) { rxBadge.textContent = rxCount; rxBadge.style.display = 'inline-block'; }
+                    if (bottomRxBadge) { bottomRxBadge.textContent = rxCount; bottomRxBadge.style.display = 'inline-block'; }
                 }
+
                 const ordersBadge = CC.$('#badge-orders-count');
-                if (ordersBadge && dashRes.stats.active_orders > 0) {
-                    ordersBadge.textContent = dashRes.stats.active_orders;
-                    ordersBadge.style.display = 'inline-block';
+                const bottomOrdersBadge = CC.$('#bottom-badge-orders');
+                if (ordersCount > 0) {
+                    if (ordersBadge) { ordersBadge.textContent = ordersCount; ordersBadge.style.display = 'inline-block'; }
+                    if (bottomOrdersBadge) { bottomOrdersBadge.textContent = ordersCount; bottomOrdersBadge.style.display = 'inline-block'; }
                 }
             }
         } catch (e) {
