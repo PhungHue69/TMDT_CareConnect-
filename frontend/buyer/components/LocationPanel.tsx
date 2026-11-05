@@ -277,7 +277,8 @@ export default function LocationPanel({
                 id="addr"
                 type="search"
                 className="h-10 w-full rounded-xl border border-[#D5DCE8] bg-white pl-9 pr-2 text-sm sm:h-[3.375rem] sm:rounded-[0.875rem] sm:pl-12 sm:pr-4 outline-none focus:border-brand focus:ring-2 focus:ring-brand/25 sm:h-[3.375rem] sm:text-base"
-                placeholder="Nhập địa chỉ…"
+                placeholder="Nhập tên đường, phường hoặc nhà thuốc…"
+                aria-describedby="address-help"
                 value={address}
                 onChange={(e) => {
                   const next = e.target.value;
@@ -311,7 +312,8 @@ export default function LocationPanel({
             </button>
           </form>
 
-          {(addressError || gpsWarn || locError || suggestions.length > 1) && (
+            <p id="address-help" className="text-sm text-muted">Chưa có dịch vụ địa chỉ đầy đủ: có thể tìm theo đường/phường của nhà thuốc trong dữ liệu sẵn có. Vị trí gợi ý là địa điểm nhà thuốc; dùng GPS hoặc chọn Tỉnh/Phường để tìm quanh vị trí của bạn.</p>
+            {(addressError || gpsWarn || locError || suggestions.length > 1) && (
             <div className="space-y-2">
               {addressError && <p role="alert" className="rounded-xl bg-danger-bg px-3 py-2 text-sm text-danger-ink">{addressError}</p>}
               {gpsWarn && <p role="alert" className="rounded-xl bg-warn-bg px-3 py-2 text-sm text-warn-ink">{gpsWarn}</p>}

@@ -48,10 +48,10 @@ export default function Header() {
               </span>
             )}
           </Link>
-          <button type="button" onClick={() => showDemoNotice("Tài khoản")} className="hidden h-11 items-center gap-2 rounded-xl bg-white px-4 text-[0.9375rem] font-semibold text-brand md:flex">
+          <a href="/buyer-family/login.html?next=%2Fshop" className="hidden h-11 items-center gap-2 rounded-xl bg-white px-4 text-[0.9375rem] font-semibold text-brand md:flex">
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-soft"><UserIcon className="h-4 w-4" /></span>
             Tài khoản
-          </button>
+          </a>
         </div>
       </div>
     </header>

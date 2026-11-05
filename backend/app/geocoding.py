@@ -1,4 +1,7 @@
 import math
+import json
+import unicodedata
+from functools import lru_cache
 import os
 from pathlib import Path
 
@@ -9,6 +12,28 @@ from fastapi import APIRouter, HTTPException, Query
 router = APIRouter()
 GOONG_ORIGIN = "https://rsapi.goong.io"
 ENV_FILE = Path(__file__).resolve().parent.parent / ".env"
+LOCAL_DATA_FILE = Path(__file__).resolve().parent.parent / 'data' / 'pharmacies.json'
+
+
+@lru_cache(maxsize=1)
+def local_places():
+    return json.loads(LOCAL_DATA_FILE.read_text(encoding='utf-8'))
+
+
+def normalized(value):
+    text = unicodedata.normalize('NFD', value.lower().replace('đ', 'd'))
+    return ''.join(c for c in text if not unicodedata.combining(c))
+
+
+def local_suggestions(q):
+    words = normalized(q).split()
+    results = []
+    for i, place in enumerate(local_places()):
+        if all(word in normalized(place['name'] + ' ' + place['address']) for word in words):
+            results.append({'place_id': f'local:{i}', 'description': f"Nhà thuốc có sẵn: {place['address']}"})
+            if len(results) == 5:
+                break
+    return {'suggestions': results}
 
 
 def client() -> httpx.Client:
@@ -43,6 +68,9 @@ def suggest(q: str = Query(min_length=2, max_length=200)):
     q = q.strip()
     if len(q) < 2:
         raise HTTPException(422, "Địa chỉ cần ít nhất 2 ký tự.")
+    load_dotenv(ENV_FILE, override=False)
+    if not os.getenv('GOONG_API_KEY', '').strip():
+        return local_suggestions(q)
     body = request("/place/autocomplete", {"input": q, "limit": 5})
     predictions = body.get("predictions")
     if not isinstance(predictions, list):
@@ -62,6 +90,15 @@ def suggest(q: str = Query(min_length=2, max_length=200)):
 
 @router.get("/geocode/resolve")
 def resolve(place_id: str = Query(min_length=1, max_length=200)):
+    if place_id.startswith('local:'):
+        try:
+            index = int(place_id[6:])
+            if index < 0:
+                raise ValueError()
+            place = local_places()[index]
+        except (ValueError, IndexError):
+            raise HTTPException(404, 'Không tìm thấy địa điểm trong danh sách nhà thuốc.') from None
+        return {'lat': place['latitude'], 'lng': place['longitude'], 'label': f"Địa điểm nhà thuốc có sẵn: {place['address']}"}
     body = request("/Place/Detail", {"placeid": place_id})
     try:
         result = body["result"]

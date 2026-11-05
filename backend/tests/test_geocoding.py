@@ -42,9 +42,25 @@ def test_resolve_returns_precise_location(client, fake_goong):
 def test_missing_key_does_not_guess_location(client, monkeypatch, tmp_path):
     monkeypatch.setattr(geocoding, "ENV_FILE", tmp_path / ".env")
     monkeypatch.delenv("GOONG_API_KEY", raising=False)
-    response = client.get("/geocode/suggest", params={"q": "12 Nguyễn Huệ"})
-    assert response.status_code == 503
+    monkeypatch.setattr(geocoding, 'local_places', lambda: [])
+    response = client.get('/geocode/suggest', params={'q': 'dia chi khong co'})
+    assert response.status_code == 200
+    assert response.json() == {'suggestions': []}
     assert "GOONG_API_KEY" not in response.text
+
+
+def test_local_address_search_and_resolve_without_provider(client, monkeypatch, tmp_path):
+    monkeypatch.setattr(geocoding, 'ENV_FILE', tmp_path / '.env')
+    monkeypatch.delenv('GOONG_API_KEY', raising=False)
+    monkeypatch.setattr(geocoding, 'local_places', lambda: [{'name': 'Nhà thuốc A', 'address': '12 Nguyễn Huệ', 'latitude': 10.77, 'longitude': 106.7}])
+    response = client.get('/geocode/suggest', params={'q': 'nguyen hue'})
+    suggestion = response.json()['suggestions'][0]
+    assert suggestion['place_id'] == 'local:0'
+    assert 'Nhà thuốc có sẵn' in suggestion['description']
+    resolved = client.get('/geocode/resolve', params={'place_id': suggestion['place_id']})
+    assert resolved.status_code == 200
+    assert resolved.json()['lat'] == 10.77
+    assert client.get('/geocode/resolve', params={'place_id': 'local:-1'}).status_code == 404
 
 
 def test_key_can_be_loaded_from_backend_env_file(client, monkeypatch, tmp_path):

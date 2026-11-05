@@ -16,7 +16,7 @@ export default function MobileNav() {
       <button type="button" onClick={() => showDemoNotice("Trang chủ")} className={`${item} text-muted`}><HomeIcon />Trang chủ</button>
       <Link href="/" aria-current={onPharmacies ? "page" : undefined} className={`${item} font-semibold ${onPharmacies ? "text-brand" : "text-muted"}`}><PinIcon />Nhà thuốc</Link>
       <button type="button" onClick={() => showDemoNotice("Đơn hàng")} className={`${item} text-muted`}><OrderIcon />Đơn hàng</button>
-      <button type="button" onClick={() => showDemoNotice("Tài khoản")} className={`${item} text-muted`}><UserIcon />Tài khoản</button>
+      <a href="/buyer-family/login.html?next=%2Fshop" className={`${item} text-muted`}><UserIcon />Tài khoản</a>
     </nav>
   );
 }
