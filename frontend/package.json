@@ -4,9 +4,13 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "vite",
-        "build": "vite build",
-        "preview": "vite preview"
+        "dev": "node scripts/dev.mjs",
+        "build": "npm run build:admin && npm run build:buyer",
+        "preview": "vite preview",
+        "dev:admin": "vite",
+        "build:admin": "vite build",
+        "build:buyer": "npm --prefix buyer run build",
+        "install:buyer": "npm --prefix buyer install"
     },
     "dependencies": {
         "react": "^19.0.0",

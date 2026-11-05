@@ -1,5 +1,13 @@
 /* CareConnect - tiện ích dùng chung cho các phân hệ: gọi API, đăng nhập, toast, modal, định dạng */
 (function () {
+    document.addEventListener('DOMContentLoaded', function () {
+        const home = document.createElement('a');
+        home.href = '/';
+        home.textContent = '← CareConnect';
+        home.className = 'cc-switch-module';
+        home.setAttribute('aria-label', 'Về trang chọn phân hệ CareConnect');
+        document.body.appendChild(home);
+    });
     const CC = (window.CC = window.CC || {});
     const TOKEN_KEY = 'cc_token';
     const USER_KEY = 'cc_user';
