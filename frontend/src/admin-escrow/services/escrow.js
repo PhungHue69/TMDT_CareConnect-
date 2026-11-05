@@ -90,3 +90,31 @@ export function hoanTatDon(state, orderId) {
         },
     };
 }
+
+export function tinhThongKe(orders) {
+    return orders.reduce(
+        (result, order) => {
+            if (order.status === "pending") {
+                result.dangGiu += order.subtotal + order.shippingCharged;
+            }
+
+            if (
+                order.status === "completed" ||
+                order.status === "paid_out"
+            ) {
+                result.hoaHongGhiNhan += order.hoaHong;
+            }
+
+            if (order.status === "paid_out") {
+                result.daChiDoiTac += order.tienDoiTac;
+            }
+
+            return result;
+        },
+        {
+            dangGiu: 0,
+            hoaHongGhiNhan: 0,
+            daChiDoiTac: 0,
+        }
+    );
+}
