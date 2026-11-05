@@ -1,6 +1,6 @@
 # Database CareConnect
 
-PostgreSQL 16 + PostGIS. Schema gồm 37 bảng, chia 6 phân hệ.
+PostgreSQL 16 + PostGIS. Schema gồm 38 bảng, chia 6 phân hệ.
 
 ## Cài đặt nhanh
 
@@ -12,7 +12,16 @@ docker run -d --name careconnect-db -e POSTGRES_PASSWORD=your_password_here -e P
 # Chạy lần lượt từ thư mục backend/database/migrations
 docker exec -i careconnect-db psql -U postgres -d careconnect_db < 001_init_schema.sql
 docker exec -i careconnect-db psql -U postgres -d careconnect_db < 002_seed_data.sql
+docker exec -i careconnect-db psql -U postgres -d careconnect_db < 003_family_care.sql
+docker exec -i careconnect-db psql -U postgres -d careconnect_db < 004_seed_family_demo.sql
 ```
+
+| File | Nội dung |
+|---|---|
+| `001_init_schema.sql` | Toàn bộ bảng, enum, index, trigger |
+| `002_seed_data.sql` | Danh mục, sản phẩm, tài khoản demo, nhà thuốc |
+| `003_family_care.sql` | Bảng `family_invites` (mã mời QR), cột `medication_adherence_logs.reminded_at` |
+| `004_seed_family_demo.sql` | Ông Bình (chưa liên kết), đơn thuốc và lịch uống thuốc của bà Lan, 1 đơn hàng chờ duyệt |
 
 Sau đó copy `backend/.env.example` thành `backend/.env` và sửa mật khẩu.
 
@@ -24,7 +33,8 @@ Muốn làm lại từ đầu: `docker rm -f careconnect-db` rồi chạy lại 
 |---|---|---|
 | 0900000000 | ADMIN | |
 | 0900000001 | BUYER | Anh Nam, ở Hà Nội. Người chăm sóc (Con) |
-| 0900000002 | BUYER | Bà Lan, mẹ anh Nam, ở Nam Định. Giao diện `SIMPLE` |
+| 0900000002 | BUYER | Bà Lan, mẹ anh Nam, ở Nam Định. Giao diện `SIMPLE`, đã liên kết với anh Nam |
+| 0900000003 | BUYER | Ông Bình, bố anh Nam. Giao diện `SIMPLE`, **chưa liên kết** (để demo liên kết bằng QR) |
 | 0900000011 | DOCTOR | BS. Hùng, Nội tổng quát, phí khám 20k, đang online |
 | 0900000012 | DOCTOR | BS. Mai, Nhi khoa, phí khám 15k |
 | 0900000021 | PHARMACIST | Chủ Nhà thuốc Minh Tâm (Hà Nội, gói Pro) |

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#1e6fd9">
+    <title>Đăng ký - CareConnect</title>
+    <link rel="stylesheet" href="../shared/css/base.css">
+    <link rel="stylesheet" href="css/buyer.css">
+</head>
+<body>
+    <main class="auth-page">
+        <div class="auth-card">
+            <div class="auth-brand">
+                <span class="brand-mark" id="brand-icon"></span>
+                <h1>CareConnect</h1>
+                <p class="muted">Tạo tài khoản để kết nối cả gia đình</p>
+            </div>
+            <form class="card stack" id="register-form" novalidate>
+                <h2>Đăng ký</h2>
+                <div class="field">
+                    <label for="full_name">Họ và tên</label>
+                    <input class="input" id="full_name" name="full_name" autocomplete="name" required>
+                </div>
+                <div class="field">
+                    <label for="phone">Số điện thoại</label>
+                    <input class="input" id="phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="0901234567" required>
+                </div>
+                <div class="form-grid form-grid-2">
+                    <div class="field">
+                        <label for="date_of_birth">Ngày sinh</label>
+                        <input class="input" id="date_of_birth" name="date_of_birth" type="date">
+                    </div>
+                    <div class="field">
+                        <label for="gender">Giới tính</label>
+                        <select class="select" id="gender" name="gender">
+                            <option value="">Chọn</option>
+                            <option value="MALE">Nam</option>
+                            <option value="FEMALE">Nữ</option>
+                            <option value="OTHER">Khác</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="password">Mật khẩu</label>
+                    <input class="input" id="password" name="password" type="password" autocomplete="new-password" minlength="6" required>
+                    <span class="hint">Tối thiểu 6 ký tự</span>
+                </div>
+                <div class="field">
+                    <label for="password2">Nhập lại mật khẩu</label>
+                    <input class="input" id="password2" name="password2" type="password" autocomplete="new-password" required>
+                </div>
+                <label class="check">
+                    <input type="checkbox" name="simple" value="1">
+                    <span>Tôi là người lớn tuổi, dùng <strong>giao diện đơn giản</strong> (chữ to, ít nút)</span>
+                </label>
+                <button class="btn btn-primary btn-lg btn-block" type="submit">Tạo tài khoản</button>
+                <p class="center small">Đã có tài khoản? <a href="login.html" id="login-link">Đăng nhập</a></p>
+            </form>
+        </div>
+    </main>
+    <script src="../shared/js/api.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
