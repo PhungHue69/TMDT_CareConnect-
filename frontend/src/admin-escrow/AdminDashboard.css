@@ -500,3 +500,12 @@ button:focus-visible {
         font-size: 30px;
     }
 }
+.admin-login { min-height: 80vh; display: grid; place-items: center; padding: 24px; background: #f4f7fc; }
+.admin-login form { width: min(100%, 440px); background: white; padding: 32px; border: 1px solid #dbe3ef; border-radius: 16px; }
+.admin-login label, .admin-content label { display: grid; gap: 8px; margin: 14px 0; }
+.admin-login input, .admin-content input, .admin-content select { padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font: inherit; max-width: 100%; }
+.admin-login button, .admin-session button { background: #2563eb; color: white; padding: 12px 20px; border: 0; border-radius: 8px; cursor: pointer; }
+.admin-login button { width: 100%; }
+.admin-session, .data-pagination { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; padding: 12px 24px; background: white; }
+.admin-session { justify-content: flex-end; }
+.admin-login [role=alert] { color: #b91c1c; }

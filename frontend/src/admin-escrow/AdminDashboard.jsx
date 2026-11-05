@@ -5,6 +5,7 @@ import EscrowTransactions from "./pages/EscrowTransactions";
 import RevenueDashboard from "./pages/RevenueDashboard";
 import PartnerWallet from "./pages/PartnerWallet";
 import PlansAndCoins from "./pages/PlansAndCoins";
+import Dataset from './pages/Dataset';
 
 import { initialOrders } from "./data/mockOrders";
 import { hoanTatDon } from "./services/escrow";
@@ -12,6 +13,7 @@ import { hoanTatDon } from "./services/escrow";
 import "./AdminDashboard.css";
 
 const menus = [
+    ['dataset', 'Dataset & kết nối'],
     ["profiles", "Duyệt hồ sơ"],
     ["escrow", "Giao dịch Escrow"],
     ["revenue", "Doanh thu"],
@@ -21,6 +23,7 @@ const menus = [
 
 export default function AdminDashboard() {
     const [active, setActive] = useState("profiles");
+    const [datasetLoaded, setDatasetLoaded] = useState(false);
 
     const [escrowState, setEscrowState] = useState({
         orders: initialOrders,
@@ -92,6 +95,7 @@ export default function AdminDashboard() {
             </aside>
 
             <main className="admin-content">
+                <div hidden={active !== 'dataset'}><Dataset loaded={datasetLoaded} onLoad={state => { setEscrowState(state); setDatasetLoaded(true); }} /></div>
                 {active === "profiles" && <ProfileApproval />}
 
                 {active === "escrow" && (

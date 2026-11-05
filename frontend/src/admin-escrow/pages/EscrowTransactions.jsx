@@ -1,5 +1,6 @@
 import { tinhHoaHong, tinhTienDoiTac } from "../services/escrow";
 import { formatMoney } from "../services/format";
+import { useState } from 'react';
 
 const statusLabels = {
     pending: "Đang giữ tiền",
@@ -9,6 +10,12 @@ const statusLabels = {
 };
 
 export default function EscrowTransactions({ orders, onComplete }) {
+    const [query, setQuery] = useState('');
+    const [status, setStatus] = useState('');
+    const [page, setPage] = useState(1);
+    const filtered = orders.filter(o => (!status || o.status === status) && `${o.id} ${o.partnerId} ${o.name}`.toLowerCase().includes(query.toLowerCase()));
+    const pages = Math.max(1, Math.ceil(filtered.length / 25));
+    const currentPage = Math.min(page, pages);
     return (
         <section>
             <h1>Giao dịch Escrow</h1>
@@ -18,6 +25,7 @@ export default function EscrowTransactions({ orders, onComplete }) {
                 đối tác. Dữ liệu sẽ mất khi tải lại trang.
             </p>
 
+            <div className="data-pagination"><label>Tìm mã đơn, đối tác, thuốc<input value={query} onChange={e => { setQuery(e.target.value); setPage(1); }} /></label><label>Trạng thái<select value={status} onChange={e => { setStatus(e.target.value); setPage(1); }}><option value="">Tất cả</option>{Object.entries(statusLabels).map(([value, text]) => <option key={value} value={value}>{text}</option>)}</select></label></div>
             <div className="finance-table-wrapper">
                 <table className="finance-table">
                     <thead>
@@ -33,7 +41,7 @@ export default function EscrowTransactions({ orders, onComplete }) {
                     </thead>
 
                     <tbody>
-                        {orders.map(order => {
+                        {filtered.slice((currentPage - 1) * 25, currentPage * 25).map(order => {
                             const total = order.subtotal + order.shippingCharged;
 
                             const commission =
@@ -45,7 +53,7 @@ export default function EscrowTransactions({ orders, onComplete }) {
 
                             return (
                                 <tr key={order.id}>
-                                    <td>{order.id}</td>
+                                    <td>{order.id}<small style={{ display: 'block' }}>{order.name}</small></td>
                                     <td>{order.partnerId}</td>
                                     <td>{formatMoney(total)}</td>
                                     <td>{formatMoney(commission)}</td>
@@ -70,6 +78,7 @@ export default function EscrowTransactions({ orders, onComplete }) {
                     </tbody>
                 </table>
             </div>
+            <div className="data-pagination"><button disabled={currentPage <= 1} onClick={() => setPage(currentPage - 1)}>Trước</button><span>Trang {currentPage}/{pages} · {filtered.length.toLocaleString('vi-VN')} kết quả</span><button disabled={currentPage >= pages} onClick={() => setPage(currentPage + 1)}>Sau</button></div>
 
             <p className="demo-note">
                 Hoa hồng và tiền đối tác của đơn đang giữ là số dự kiến.
