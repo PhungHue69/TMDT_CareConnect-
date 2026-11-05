@@ -29,3 +29,7 @@ data/demo/
 Thumbs.db
 
 /scripts
+
+# File upload tạm thời của người dùng
+frontend/uploads/storefront/*
+!frontend/uploads/storefront/.gitkeep

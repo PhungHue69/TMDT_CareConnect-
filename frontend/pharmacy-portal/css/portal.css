@@ -1,0 +1,835 @@
+/* =============================================================================
+   CareConnect Pharmacy Portal - Style chuyên biệt cho Dược sĩ / Nhà thuốc chuẩn GPP
+   Kế thừa toàn bộ hệ màu và quy chuẩn từ frontend/shared/css/base.css
+   ============================================================================= */
+
+:root {
+    --portal-sidebar-w: 260px;
+    --portal-header-h: 64px;
+}
+
+body.portal-body {
+    display: flex;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    padding-bottom: 0;
+}
+
+/* Sidebar cố định bên trái */
+.portal-sidebar {
+    width: var(--portal-sidebar-w);
+    background: #ffffff;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 50;
+    transition: transform 0.25s ease;
+}
+
+.portal-brand {
+    height: var(--portal-header-h);
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+    background: #ffffff;
+}
+
+.portal-brand-logo {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, #1e6fd9, #1557b0);
+    color: #ffffff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 2px 6px rgba(30, 111, 217, 0.25);
+}
+
+.portal-brand-text h1 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+    line-height: 1.2;
+}
+
+.portal-brand-text span {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-weight: 500;
+}
+
+.portal-nav {
+    flex: 1;
+    padding: 16px 12px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.portal-nav-group-title {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    padding: 12px 12px 6px;
+}
+
+.portal-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    color: #475467;
+    font-weight: 600;
+    font-size: 0.93rem;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.portal-nav-link:hover {
+    background: var(--primary-softer);
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.portal-nav-link.active {
+    background: var(--primary-soft);
+    color: var(--primary-dark);
+}
+
+.portal-nav-link .nav-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.portal-nav-badge {
+    margin-left: auto;
+    background: var(--danger);
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+/* Phần footer của Sidebar (thông tin Dược sĩ & Nhà thuốc) */
+.portal-sidebar-footer {
+    padding: 14px 16px;
+    border-top: 1px solid var(--border);
+    background: #fafbfc;
+}
+
+.pharmacy-badge-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pharmacy-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary-soft);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.pharmacy-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.pharmacy-name {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pharmacist-name {
+    font-size: 0.78rem;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Khung nội dung chính */
+.portal-main-wrapper {
+    flex: 1;
+    margin-left: var(--portal-sidebar-w);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.portal-topbar {
+    height: var(--portal-header-h);
+    background: #ffffff;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.topbar-page-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.portal-content-body {
+    padding: 24px 28px 40px;
+    flex: 1;
+}
+
+/* Các thẻ chỉ số KPI Dashboard */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.kpi-card {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(16, 24, 40, 0.08);
+}
+
+.kpi-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.kpi-card-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--muted);
+}
+
+.kpi-card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.kpi-card-icon.blue { background: var(--primary-soft); color: var(--primary); }
+.kpi-card-icon.orange { background: var(--warning-soft); color: var(--warning); }
+.kpi-card-icon.green { background: var(--success-soft); color: var(--success); }
+.kpi-card-icon.red { background: var(--danger-soft); color: var(--danger); }
+
+.kpi-card-value {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 4px;
+}
+
+.kpi-card-footer {
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+/* Bảng dữ liệu */
+.portal-card {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.portal-card-header {
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.portal-card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text);
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.portal-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+.portal-table th {
+    background: #f8fafc;
+    color: #475467;
+    font-weight: 600;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+
+.portal-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: middle;
+}
+
+.portal-table tr:hover td {
+    background: #fafbfc;
+}
+
+/* Badge trạng thái */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.badge-info { background: #e0f2fe; color: #0284c7; }
+.badge-warning { background: #fef3c7; color: #b45309; }
+.badge-success { background: #dcfce7; color: #15803d; }
+.badge-danger { background: #fee2e2; color: #b91c1c; }
+.badge-gray { background: #f1f5f9; color: #475467; }
+.badge-pro { background: linear-gradient(135deg, #f59e0b, #d97706); color: #ffffff; }
+
+/* =============================================================================
+   Các nút điều khiển và Thanh điều hướng Mobile (Responsive Drawer & Bottom Nav)
+   ============================================================================= */
+.btn-sidebar-toggle {
+    display: none;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: 38px;
+    height: 38px;
+    font-size: 1.25rem;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #1e293b;
+    padding: 0;
+    transition: background 0.15s;
+    flex-shrink: 0;
+}
+.btn-sidebar-toggle:hover {
+    background: #f1f5f9;
+}
+
+.btn-sidebar-close {
+    display: none;
+    background: transparent;
+    border: none;
+    font-size: 1.25rem;
+    color: #64748b;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin-left: auto;
+}
+.btn-sidebar-close:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+.portal-sidebar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(2px);
+    z-index: 49;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+.portal-sidebar-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+body.sidebar-drawer-open {
+    overflow: hidden;
+}
+
+/* Thanh điều hướng đáy màn hình cho điện thoại (Mobile Bottom Navigation Bar) */
+.portal-bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: #ffffff;
+    border-top: 1px solid var(--border);
+    z-index: 45;
+    padding-bottom: env(safe-area-inset-bottom);
+    box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.08);
+    justify-content: space-around;
+    align-items: center;
+}
+
+.bottom-nav-item {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #64748b;
+    font-size: 0.72rem;
+    font-weight: 600;
+    position: relative;
+    transition: color 0.15s;
+    gap: 2px;
+}
+.bottom-nav-item .bottom-nav-icon {
+    font-size: 1.25rem;
+    line-height: 1;
+}
+.bottom-nav-item:hover, .bottom-nav-item.active {
+    color: var(--primary);
+    text-decoration: none;
+}
+.bottom-nav-item.active .bottom-nav-label {
+    font-weight: 700;
+}
+.bottom-nav-badge {
+    position: absolute;
+    top: 4px;
+    right: calc(50% - 18px);
+    background: var(--danger);
+    color: #ffffff;
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 1px 5px;
+    border-radius: 10px;
+    min-width: 14px;
+    text-align: center;
+    line-height: 1.2;
+}
+
+/* =============================================================================
+   Hệ thống Lưới co giãn Responsive (Grid layouts)
+   ============================================================================= */
+.dashboard-recent-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 24px;
+}
+
+.profile-layout-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+.modal-order-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 24px;
+}
+
+.form-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.form-row-gps {
+    display: grid;
+    grid-template-columns: 1fr 1fr 120px;
+    gap: 12px;
+    align-items: end;
+}
+
+/* =============================================================================
+   Media Queries: Tối ưu hiển thị điện thoại và máy tính bảng
+   ============================================================================= */
+@media (max-width: 900px) {
+    .btn-sidebar-toggle {
+        display: inline-flex;
+    }
+    .btn-sidebar-close {
+        display: inline-block;
+    }
+    .portal-sidebar {
+        transform: translateX(-100%);
+        width: 280px;
+        max-width: 85vw;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    }
+    .portal-sidebar.open {
+        transform: translateX(0);
+    }
+    .portal-main-wrapper {
+        margin-left: 0;
+        width: 100%;
+    }
+    .profile-layout-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+    .modal-order-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Kích hoạt Bottom Navigation trên mobile */
+    .portal-bottom-nav {
+        display: flex;
+    }
+    body.portal-body {
+        padding-bottom: 60px;
+    }
+    .portal-content-body {
+        padding: 14px 12px 85px;
+    }
+
+    /* Topbar gọn gàng */
+    .portal-topbar {
+        padding: 0 12px;
+        height: 56px;
+    }
+    .topbar-left {
+        gap: 10px;
+    }
+    .topbar-title-group {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+    .topbar-page-title {
+        font-size: 1rem;
+        line-height: 1.2;
+    }
+    .topbar-badges {
+        display: flex;
+        gap: 4px;
+    }
+    .topbar-badges .badge {
+        padding: 2px 6px;
+        font-size: 0.68rem;
+    }
+    .topbar-btn .btn-text {
+        display: none;
+    }
+    .topbar-btn {
+        padding: 6px 10px !important;
+        font-size: 1rem !important;
+    }
+
+    /* Thẻ chỉ số KPI hiển thị 2 cột cân đối */
+    .kpi-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+        margin-bottom: 16px !important;
+    }
+    .kpi-card {
+        padding: 12px 14px !important;
+    }
+    .kpi-card-value {
+        font-size: 1.35rem !important;
+    }
+    .kpi-card-title {
+        font-size: 0.78rem !important;
+    }
+    .kpi-card-icon {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 14px !important;
+    }
+    .kpi-card-footer {
+        font-size: 0.72rem !important;
+    }
+
+    /* Thanh tìm kiếm & Bộ lọc xếp dọc */
+    .filter-bar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+        padding: 12px !important;
+    }
+    .filter-search-box {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+    .filter-bar select, .filter-bar input, .filter-bar button {
+        width: 100% !important;
+        min-height: 42px !important;
+        box-sizing: border-box;
+    }
+
+    /* Banner chào ca trực và tiêu đề trang */
+    .page-header-box {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px !important;
+        padding: 14px !important;
+    }
+    .page-header-box .header-buttons {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+    .page-header-box .header-buttons .btn {
+        width: 100% !important;
+        justify-content: center !important;
+        min-height: 40px !important;
+    }
+
+    /* Bảng danh sách gần đây & Lưới giao diện */
+    .dashboard-recent-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    .form-row-2 {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+    }
+    .form-row-gps {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+    }
+    .form-row-gps > div:last-child {
+        grid-column: span 2 !important;
+    }
+    .form-row-gps button {
+        height: 40px !important;
+    }
+    .finance-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+
+    /* Tabs cuộn ngang mượt mà trên mobile */
+    .order-tab-nav, .rx-tab-nav {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        padding-bottom: 2px !important;
+    }
+    .order-tab-nav::-webkit-scrollbar, .rx-tab-nav::-webkit-scrollbar {
+        display: none !important;
+    }
+    .order-tab-item, .rx-tab-item {
+        padding: 8px 14px !important;
+        font-size: 0.85rem !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* Bảng dữ liệu có thanh cuộn ngang mượt mà */
+    .table-responsive {
+        -webkit-overflow-scrolling: touch !important;
+        border-radius: 8px;
+    }
+    .portal-table th, .portal-table td {
+        padding: 10px 12px !important;
+        font-size: 0.82rem !important;
+        white-space: nowrap;
+    }
+
+    /* Modal dạng Bottom Sheet vuốt từ dưới lên trên điện thoại */
+    .portal-modal-backdrop {
+        padding: 0 !important;
+        align-items: flex-end !important;
+    }
+    .portal-modal-content, .portal-modal-box {
+        max-width: 100% !important;
+        width: 100% !important;
+        border-radius: 20px 20px 0 0 !important;
+        max-height: 92vh !important;
+        animation: modal-sheet-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    @keyframes modal-sheet-in {
+        from {
+            opacity: 0;
+            transform: translateY(100%);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .portal-modal-body {
+        padding: 14px 16px !important;
+    }
+    .portal-modal-header {
+        padding: 14px 16px !important;
+    }
+    .portal-modal-footer {
+        padding: 12px 16px !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+    }
+    .portal-modal-footer .btn {
+        flex: 1;
+        min-height: 42px;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .kpi-grid {
+        grid-template-columns: 1fr !important;
+    }
+    .portal-card-header {
+        padding: 12px 14px !important;
+    }
+    .portal-card-title {
+        font-size: 0.95rem !important;
+    }
+}
+
+/* =============================================================================
+   Modal Chuẩn hóa cho Toàn bộ Pharmacy Portal (Z-Index cao hơn Topbar & Sidebar)
+   ============================================================================= */
+.portal-modal-backdrop {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(15, 23, 42, 0.65) !important;
+    backdrop-filter: blur(4px);
+    z-index: 99999 !important;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.portal-modal-content, .portal-modal-box {
+    background: #ffffff !important;
+    border-radius: 16px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+    width: 100%;
+    max-width: 960px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    z-index: 100000;
+    animation: modal-zoom-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modal-zoom-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.portal-modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    background: #ffffff !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.portal-modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    background: #ffffff !important;
+}
+
+.portal-modal-footer {
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+    background: #f8fafc !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
