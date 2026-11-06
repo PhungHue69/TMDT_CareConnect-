@@ -10,7 +10,7 @@
     // Các mục chưa làm hiển thị mờ để cả nhóm thấy khung menu cuối cùng
     const NAV = [
         { key: 'dashboard', icon: '🏠', label: 'Tổng quan', href: 'index.html' },
-        { key: 'queue', icon: '💬', label: 'Hàng chờ khám', soon: true },
+        { key: 'queue', icon: '💬', label: 'Hàng chờ khám', href: 'queue.html' },
         { key: 'prescribe', icon: '📝', label: 'Kê đơn điện tử', soon: true },
         { key: 'wallet', icon: '💰', label: 'Ví và thu nhập', soon: true },
         { key: 'reviews', icon: '⭐', label: 'Đánh giá', soon: true },
