@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ví & thu nhập</title>
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="css/doctor.css">
+<style>
+  .tp-wrap { max-width: 900px; margin: 0 auto; padding: 16px; }
+  .tp-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .tp-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px; }
+  .tp-card small { color: #6b7280; display: block; margin-bottom: 4px; }
+  .tp-card b { font-size: 20px; }
+  .tp-box { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+  .tp-box h3 { margin: 0 0 12px; }
+  .tp-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+  .tp-form input { padding: 8px 10px; border: 1px solid #d1d5db; border-radius: 8px; }
+  .tp-btn { padding: 9px 16px; border: 0; border-radius: 8px; background: #0d9488; color: #fff; cursor: pointer; }
+  .tp-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .tp-table th, .tp-table td { text-align: left; padding: 8px; border-bottom: 1px solid #f1f5f9; }
+  .tp-msg { margin-top: 8px; font-size: 14px; }
+  .tp-err { color: #dc2626; } .tp-ok { color: #16a34a; }
+</style>
+</head>
+<body>
+<div id="app" class="tp-wrap">
+  <h2>💰 Ví & thu nhập</h2>
+  <div class="tp-cards" id="cards">Đang tải...</div>
+
+  <div class="tp-box">
+    <h3>Yêu cầu rút tiền</h3>
+    <div class="tp-form">
+      <input id="p-amount" type="number" placeholder="Số tiền (tối thiểu 10.000)">
+      <input id="p-bank" placeholder="Ngân hàng">
+      <input id="p-number" placeholder="Số tài khoản">
+      <input id="p-holder" placeholder="Chủ tài khoản">
+    </div>
+    <div style="margin-top:10px"><button class="tp-btn" id="p-submit">Gửi yêu cầu rút</button></div>
+    <div id="p-msg" class="tp-msg"></div>
+  </div>
+
+  <div class="tp-box"><h3>Yêu cầu rút tiền gần đây</h3><div id="payouts"></div></div>
+  <div class="tp-box"><h3>Lịch sử giao dịch</h3><div id="txs"></div></div>
+</div>
+<script src="js/api.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/wallet.js"></script>
+</body>
+</html>

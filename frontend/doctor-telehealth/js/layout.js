@@ -11,9 +11,9 @@
     const NAV = [
         { key: 'dashboard', icon: '🏠', label: 'Tổng quan', href: 'index.html' },
         { key: 'queue', icon: '💬', label: 'Hàng chờ khám', href: 'queue.html' },
-        { key: 'prescribe', icon: '📝', label: 'Kê đơn điện tử', soon: true },
-        { key: 'wallet', icon: '💰', label: 'Ví và thu nhập', soon: true },
-        { key: 'reviews', icon: '⭐', label: 'Đánh giá', soon: true },
+        { key: 'prescribe', icon: '📝', label: 'Kê đơn điện tử', href: 'prescribe.html' },
+        { key: 'wallet', icon: '💰', label: 'Ví và thu nhập', href: 'wallet.html' },
+        { key: 'reviews', icon: '⭐', label: 'Đánh giá', href: 'reviews.html' },
     ];
 
     async function initDoctorLayout(activeKey, pageTitle) {
