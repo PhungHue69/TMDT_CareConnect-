@@ -4,6 +4,8 @@ const { PORT, DEMO_MODE, MISSED_ALERT_MINUTES } = require('./config');
 const { requireAuth } = require('./middleware/auth');
 const { errorHandler } = require('./utils/http');
 const { startReminderScheduler } = require('./jobs/reminderScheduler');
+const { requireDoctor } = require('./middleware/doctorAuth');
+
 
 const app = express();
 app.use(express.json({ limit: '1mb' }));
@@ -19,6 +21,12 @@ app.use('/api/profile', requireAuth, require('./routes/profile'));
 app.use('/api/family', requireAuth, require('./routes/family'));
 app.use('/api/reminders', requireAuth, require('./routes/reminders'));
 app.use('/api/notifications', requireAuth, require('./routes/notifications'));
+app.use('/api/notifications', requireAuth, require('./routes/notifications'));
+
+// Phân hệ Bác sĩ - Doctor Portal (TV3)
+app.use('/api/doctor', requireAuth, requireDoctor, require('./routes/doctor'));
+
+if (DEMO_MODE) app.use('/api/demo', requireAuth, require('./routes/demo'));
 
 if (DEMO_MODE) app.use('/api/demo', requireAuth, require('./routes/demo'));
 
@@ -33,3 +41,5 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`CareConnect đang chạy tại http://localhost:${PORT}`);
     startReminderScheduler();
 });
+
+
