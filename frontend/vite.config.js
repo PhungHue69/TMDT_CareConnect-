@@ -17,7 +17,7 @@ export default defineConfig({
         strictPort: true,
         proxy: {
             '/admin-api': 'http://127.0.0.1:5001',
-            '/shop': 'http://127.0.0.1:3001',
+            '/shop': { target: 'http://127.0.0.1:3001', ws: true },
             '/demo-api': { target: 'http://127.0.0.1:8000', rewrite: path => path.replace(/^\/demo-api/, '') },
             '/static': 'http://127.0.0.1:8000',
             '/api': 'http://127.0.0.1:5000',

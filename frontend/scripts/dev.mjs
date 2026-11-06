@@ -14,13 +14,25 @@ function stop() {
     }
 }
 async function available(port) {
-    return new Promise(resolve => {
-        const socket = createConnection({ host: '127.0.0.1', port });
+    const occupied = await Promise.all(['127.0.0.1', '::1', 'localhost'].map(host => new Promise(resolve => {
+        const socket = createConnection({ host, port });
+        let settled = false;
+        function finish(value) {
+            if (settled) return;
+            settled = true;
+            socket.destroy();
+            resolve(value);
+        }
         socket.setTimeout(1000);
-        socket.once('connect', () => { socket.destroy(); console.log(`Cổng ${port} đã có dịch vụ; giữ phiên đang chạy. Dừng terminal cũ nếu cần áp dụng bản sửa backend.`); resolve(false); });
-        socket.once('error', () => { socket.destroy(); resolve(true); });
-        socket.once('timeout', () => { socket.destroy(); resolve(true); });
-    });
+        socket.once('connect', () => finish(true));
+        socket.once('error', () => finish(false));
+        socket.once('timeout', () => finish(false));
+    })));
+    if (occupied.some(Boolean)) {
+        console.log(`Cổng ${port} đã có dịch vụ; giữ phiên đang chạy. Dừng terminal cũ nếu cần áp dụng bản sửa backend.`);
+        return false;
+    }
+    return true;
 }
 async function start(entry, args, cwd, port) {
     if (!await available(port)) return;

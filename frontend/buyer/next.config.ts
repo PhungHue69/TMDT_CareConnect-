@@ -11,9 +11,6 @@ const nextConfig: NextConfig = {
       { source: "/static/:path*", destination: "http://127.0.0.1:8000/static/:path*" },
     ];
   },
-  cacheComponents: true,
-  partialPrefetching: true,
-  reactCompiler: true,
   turbopack: {
     root: __dirname,
     rules: {
