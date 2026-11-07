@@ -1,17 +1,28 @@
 const path = require('path');
 const express = require('express');
 const { PORT, DEMO_MODE, MISSED_ALERT_MINUTES } = require('./config');
-const { requireAuth } = require('./middleware/auth');
+const { requireAuth, requirePharmacist } = require('./middleware/auth');
 const { errorHandler } = require('./utils/http');
 const { startReminderScheduler } = require('./jobs/reminderScheduler');
 const { requireDoctor } = require('./middleware/doctorAuth');
-
+const db = require('./db');
 
 const app = express();
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({ limit: '15mb' }));
+app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 
 app.get('/api/config', (req, res) => {
     res.json({ demo_mode: DEMO_MODE, missed_alert_minutes: MISSED_ALERT_MINUTES });
+});
+
+// Health check endpoint cho toàn hệ thống
+app.get('/api/health', async (req, res) => {
+    try {
+        await db.query('SELECT 1');
+        res.json({ status: 'healthy', database: 'connected', time: new Date().toISOString() });
+    } catch (err) {
+        res.status(503).json({ status: 'unhealthy', database: 'disconnected', error: err.message });
+    }
 });
 
 app.use('/api/auth', require('./routes/auth'));
@@ -27,6 +38,9 @@ app.use('/api/notifications', requireAuth, require('./routes/notifications'));
 app.use('/api/doctor', requireAuth, requireDoctor, require('./routes/doctor'));
 
 if (DEMO_MODE) app.use('/api/demo', requireAuth, require('./routes/demo'));
+
+// Phân hệ Nhà thuốc - Pharmacy Portal (TV4)
+app.use('/api/pharmacy', requireAuth, requirePharmacist, require('./routes/pharmacy'));
 
 if (DEMO_MODE) app.use('/api/demo', requireAuth, require('./routes/demo'));
 

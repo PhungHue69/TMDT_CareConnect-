@@ -1,0 +1,32 @@
+export const initialOrders = [
+    {
+        id: "DH001",
+        partnerId: "NT001",
+        name: "Đơn thuốc OTC",
+        subtotal: 280000,
+        shippingCharged: 40000,
+        shippingActual: 40000,
+        commissionRate: 10,
+        status: "pending",
+    },
+    {
+        id: "DH002",
+        partnerId: "BS001",
+        name: "Tư vấn bác sĩ",
+        subtotal: 200000,
+        shippingCharged: 0,
+        shippingActual: 0,
+        commissionRate: 15,
+        status: "pending",
+    },
+    {
+        id: "DH003",
+        partnerId: "DT001",
+        name: "Đơn minh họa",
+        subtotal: 100000,
+        shippingCharged: 0,
+        shippingActual: 0,
+        commissionRate: 5,
+        status: "pending",
+    },
+];

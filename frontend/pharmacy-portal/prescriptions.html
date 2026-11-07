@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#1e6fd9">
+    <title>Tiếp nhận & Báo giá Đơn thuốc - CareConnect Pharmacy Portal</title>
+    <link rel="stylesheet" href="../shared/css/base.css">
+    <link rel="stylesheet" href="css/portal.css">
+    <style>
+        .rx-tab-nav {
+            display: flex;
+            gap: 8px;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        .rx-tab-item {
+            padding: 10px 18px;
+            font-weight: 600;
+            font-size: 0.92rem;
+            color: var(--muted);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+        }
+        .rx-tab-item:hover {
+            color: var(--primary);
+        }
+        .rx-tab-item.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            font-weight: 700;
+        }
+        .rx-split-layout {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+        @media (max-width: 1024px) {
+            .rx-split-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        .rx-image-box {
+            position: relative;
+            background: #0f172a;
+            border-radius: var(--radius);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 280px;
+            max-height: 480px;
+        }
+        .rx-image-box img {
+            max-width: 100%;
+            max-height: 480px;
+            object-fit: contain;
+            transition: transform 0.2s ease;
+        }
+        .rx-image-tools {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            display: flex;
+            gap: 6px;
+            background: rgba(15, 23, 42, 0.75);
+            padding: 4px 8px;
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .rx-image-btn {
+            background: transparent;
+            border: 0;
+            color: #ffffff;
+            cursor: pointer;
+            padding: 4px 8px;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+        .rx-image-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .quote-item-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 16px;
+            transition: border-color 0.15s ease;
+        }
+        .quote-item-card:hover {
+            border-color: #cbd5e1;
+        }
+        .quote-item-card.has-substitute {
+            border-left: 4px solid var(--warning);
+            background: #fffdfa;
+        }
+        .quote-total-box {
+            background: linear-gradient(135deg, #f8fafc 0%, #e8f1fd 100%);
+            border: 1px solid #bfdbfe;
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body class="portal-body">
+    <!-- Sidebar -->
+    <aside class="portal-sidebar" id="portal-sidebar"></aside>
+
+    <!-- Khung chính -->
+    <div class="portal-main-wrapper">
+        <header class="portal-topbar" id="portal-topbar"></header>
+
+        <main class="portal-content-body">
+            <!-- ================= VIEW 1: DANH SÁCH YÊU CẦU ================= -->
+            <div id="view-list">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+                    <div>
+                        <h2 style="font-size:1.3rem;font-weight:700;margin:0">Tiếp nhận & Báo giá Đơn thuốc</h2>
+                        <p class="muted small" style="margin-top:2px">Duyệt đơn thuốc có AI Guardrail phê duyệt, đối soát tồn kho và gửi báo giá cho người mua</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline" id="btn-mock-seed" title="Tạo đơn thuốc mẫu gửi tới nhà thuốc để thử nghiệm luồng báo giá">
+                            🧪 Tạo đơn thuốc mẫu để thử nghiệm
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tabs trạng thái -->
+                <div class="rx-tab-nav">
+                    <div class="rx-tab-item active" data-status="SENT">
+                        ⏳ Chờ báo giá <span class="badge badge-warning" id="tab-badge-sent">0</span>
+                    </div>
+                    <div class="rx-tab-item" data-status="QUOTED">
+                        📝 Đã báo giá <span class="badge badge-info" id="tab-badge-quoted">0</span>
+                    </div>
+                    <div class="rx-tab-item" data-status="ACCEPTED">
+                        ✓ Khách đã chốt <span class="badge badge-success" id="tab-badge-accepted">0</span>
+                    </div>
+                    <div class="rx-tab-item" data-status="REJECTED">
+                        ❌ Đã từ chối <span class="badge badge-danger" id="tab-badge-rejected">0</span>
+                    </div>
+                    <div class="rx-tab-item" data-status="ALL">
+                        Tất cả <span class="badge badge-gray" id="tab-badge-all">0</span>
+                    </div>
+                </div>
+
+                <!-- Ô tìm kiếm -->
+                <div style="background:#ffffff;border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:20px;display:flex;gap:12px">
+                    <input class="input" id="search-rx-input" type="search" placeholder="🔍 Tìm theo tên bệnh nhân, SĐT người gửi, chẩn đoán bệnh..." style="flex:1">
+                    <button class="btn btn-outline btn-sm" id="btn-search-rx">Tìm kiếm</button>
+                </div>
+
+                <!-- Bảng danh sách đơn thuốc -->
+                <div class="portal-card">
+                    <div class="table-responsive">
+                        <table class="portal-table">
+                            <thead>
+                                <tr>
+                                    <th>Mã yêu cầu</th>
+                                    <th>Bệnh nhân / Khách hàng</th>
+                                    <th>Chẩn đoán & Cơ sở y tế</th>
+                                    <th>Nguồn đơn</th>
+                                    <th>Số thuốc</th>
+                                    <th>Trạng thái</th>
+                                    <th style="text-align:right">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rx-table-body">
+                                <tr><td colspan="7" class="center muted" style="padding:40px">Đang tải dữ liệu đơn thuốc...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 2: CHI TIẾT & BÁO GIÁ ĐƠN THUỐC ================= -->
+            <div id="view-detail" style="display:none">
+                <div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between">
+                    <div style="display:flex;align-items:center;gap:12px">
+                        <button class="btn btn-outline btn-sm" id="btn-back-to-list">
+                            ← Quay lại danh sách
+                        </button>
+                        <h2 style="font-size:1.25rem;font-weight:700;margin:0" id="detail-header-title">
+                            Chi tiết đơn thuốc #RX-00
+                        </h2>
+                        <span id="detail-header-badge"></span>
+                    </div>
+                </div>
+
+                <div class="rx-split-layout">
+                    <!-- Cột trái: Hồ sơ đơn thuốc & Soi ảnh -->
+                    <div class="stack">
+                        <!-- Thông tin bệnh nhân -->
+                        <div class="portal-card" style="padding:18px;margin-bottom:0">
+                            <h3 style="font-size:1rem;font-weight:700;margin-bottom:12px;color:var(--text);display:flex;align-items:center;gap:8px">
+                                <span>👤</span> Thông tin bệnh nhân & Đơn
+                            </h3>
+                            <div class="stack-sm" style="font-size:0.9rem">
+                                <div style="display:flex;justify-content:space-between">
+                                    <span class="muted">Bệnh nhân:</span>
+                                    <strong id="dt-patient-name">-</strong>
+                                </div>
+                                <div style="display:flex;justify-content:space-between">
+                                    <span class="muted">Người gửi đơn:</span>
+                                    <span id="dt-requester-info">-</span>
+                                </div>
+                                <div style="display:flex;justify-content:space-between">
+                                    <span class="muted">Nguồn đơn:</span>
+                                    <span id="dt-source-badge">-</span>
+                                </div>
+                                <div style="display:flex;justify-content:space-between">
+                                    <span class="muted">Nơi kê đơn:</span>
+                                    <span id="dt-facility">-</span>
+                                </div>
+                                <div style="display:flex;justify-content:space-between">
+                                    <span class="muted">Bác sĩ kê:</span>
+                                    <span id="dt-prescriber">-</span>
+                                </div>
+                                <div style="border-top:1px dashed var(--border);padding-top:10px;margin-top:6px">
+                                    <span class="muted" style="display:block;margin-bottom:4px">Chẩn đoán:</span>
+                                    <div style="background:#f8fafc;padding:8px 12px;border-radius:8px;font-weight:600;color:#1e293b" id="dt-diagnosis">-</div>
+                                </div>
+                                <div style="margin-top:6px" id="dt-ai-guardrail-box">
+                                    <span class="badge badge-success" style="width:100%;justify-content:center;padding:6px">
+                                        🛡️ AI Guardrail: ĐƠN THUỐC ĐÃ ĐƯỢC DUYỆT HỢP LỆ
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Khung soi ảnh đơn thuốc -->
+                        <div class="portal-card" style="padding:18px;margin-bottom:0" id="card-rx-image">
+                            <h3 style="font-size:1rem;font-weight:700;margin-bottom:12px;color:var(--text);display:flex;align-items:center;gap:8px">
+                                <span>🖼️</span> Ảnh chụp đơn thuốc gốc
+                            </h3>
+                            <div class="rx-image-box">
+                                <img id="dt-rx-img" src="" alt="Ảnh đơn thuốc" style="transform:scale(1) rotate(0deg)">
+                                <div class="rx-image-tools">
+                                    <button class="rx-image-btn" id="btn-zoom-in" title="Phóng to">🔍 +</button>
+                                    <button class="rx-image-btn" id="btn-zoom-out" title="Thu nhỏ">🔍 -</button>
+                                    <button class="rx-image-btn" id="btn-rotate" title="Xoay ảnh 90 độ">🔄 Xoay</button>
+                                    <button class="rx-image-btn" id="btn-view-full" title="Mở ảnh lớn">⤢ Toàn màn hình</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cột phải: Bảng đối soát tồn kho & Form báo giá -->
+                    <div>
+                        <div class="portal-card" style="padding:22px;margin-bottom:0">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+                                <h3 style="font-size:1.1rem;font-weight:700;margin:0">
+                                    📋 Danh mục thuốc & Đối soát tồn kho
+                                </h3>
+                                <span class="small muted" id="dt-item-count">0 loại thuốc</span>
+                            </div>
+
+                            <!-- Danh sách thuốc cần báo giá -->
+                            <form id="form-quote-submission">
+                                <div id="quote-items-container">
+                                    <!-- Dynamic items -->
+                                </div>
+
+                                <!-- Khung tổng tiền & Lời dặn -->
+                                <div class="quote-total-box">
+                                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+                                        <div>
+                                            <span style="font-size:0.9rem;font-weight:600;color:var(--muted)">TỔNG TIỀN BÁO GIÁ ĐƠN THUỐC:</span>
+                                            <div style="font-size:1.8rem;font-weight:800;color:var(--primary-dark);line-height:1.2" id="dt-total-quoted-amount">0đ</div>
+                                        </div>
+                                        <div>
+                                            <label for="quote-expiry" style="font-size:0.8rem;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Hiệu lực báo giá:</label>
+                                            <select class="input" id="quote-expiry" style="width:160px;font-size:0.88rem;background:#ffffff">
+                                                <option value="12">12 Giờ</option>
+                                                <option value="24" selected>24 Giờ</option>
+                                                <option value="48">48 Giờ</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="field" style="margin-bottom:0">
+                                        <label for="quote-pharmacist-note" style="font-weight:700">Lời dặn & Hướng dẫn sử dụng của Dược sĩ:</label>
+                                        <textarea class="input" id="quote-pharmacist-note" rows="3" placeholder="Nhập lời dặn cách dùng thuốc (ví dụ: Uống sau ăn no 30 phút, kháng sinh uống đủ liều 5 ngày, kiêng bia rượu...)" style="background:#ffffff"></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Nút thao tác -->
+                                <div style="display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:20px" id="quote-action-buttons">
+                                    <button type="button" class="btn btn-outline" id="btn-reject-rx" style="color:var(--danger)">
+                                        ❌ Từ chối đơn thuốc
+                                    </button>
+                                    <button type="submit" class="btn btn-primary btn-lg" id="btn-submit-quote">
+                                        🚀 Gửi báo giá cho khách hàng
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../shared/js/api.js"></script>
+    <script src="../shared/js/realtime.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/prescriptions.js"></script>
+</body>
+</html>

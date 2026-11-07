@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#1e6fd9">
+    <title>Hồ sơ & Thông tin Nhà thuốc - CareConnect Pharmacy Portal</title>
+    <link rel="stylesheet" href="../shared/css/base.css">
+    <link rel="stylesheet" href="css/portal.css">
+</head>
+<body class="portal-body">
+    <!-- Sidebar cố định -->
+    <aside class="portal-sidebar" id="portal-sidebar"></aside>
+
+    <!-- Khung chính -->
+    <div class="portal-main-wrapper">
+        <header class="portal-topbar" id="portal-topbar"></header>
+
+        <main class="portal-content-body">
+            <!-- Header tiêu đề trang -->
+            <div class="page-header-box" style="background:#ffffff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+                <div>
+                    <h2 style="font-size:1.25rem;font-weight:800;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:8px">
+                        <span>🏪</span> Hồ sơ & Thông tin Nhà thuốc
+                    </h2>
+                    <p class="muted small" style="margin:0">
+                        Quản lý thông tin pháp lý chuẩn GPP, dược sĩ phụ trách chuyên môn và tọa độ GPS phục vụ điều phối đơn hàng O2O.
+                    </p>
+                </div>
+                <div class="header-buttons" style="display:flex;gap:10px;align-items:center">
+                    <button type="submit" form="form-pharmacy-profile" class="btn btn-primary" id="btn-save-profile">
+                        💾 Lưu thay đổi
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bố cục 2 cột -->
+            <div class="profile-layout-grid">
+                <!-- Cột trái: Form chỉnh sửa -->
+                <form id="form-pharmacy-profile" class="portal-card" style="padding:22px;margin:0">
+                    <h3 style="font-size:1.05rem;font-weight:700;color:var(--primary-dark);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)">
+                        📋 Thông tin cơ sở & Pháp lý GPP
+                    </h3>
+
+                    <div class="field">
+                        <label class="form-label" style="font-weight:700">Tên Nhà thuốc <span style="color:#dc2626">*</span></label>
+                        <input type="text" id="prof-pharmacy-name" class="form-control" required style="font-weight:700;font-size:1rem;color:#0f172a">
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="field">
+                            <label class="form-label" style="font-weight:700">Số chứng chỉ GPP <span style="color:#dc2626">*</span></label>
+                            <input type="text" id="prof-gpp-cert" class="form-control" placeholder="GPP-HN-12345" required style="font-family:monospace;font-weight:700">
+                        </div>
+                        <div class="field">
+                            <label class="form-label" style="font-weight:700">Số ĐKKD Dược</label>
+                            <input type="text" id="prof-biz-license" class="form-control" placeholder="01A8888999/KD" style="font-family:monospace">
+                        </div>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="field">
+                            <label class="form-label" style="font-weight:700">Hotline Nhà thuốc</label>
+                            <input type="text" id="prof-pharmacy-phone" class="form-control" placeholder="024-3888-9999">
+                        </div>
+                        <div class="field">
+                            <label class="form-label" style="font-weight:700">Ảnh quầy thuốc (URL hoặc Tải lên)</label>
+                            <div style="display:flex;gap:6px">
+                                <input type="text" id="prof-storefront-img" class="form-control" placeholder="Tự động điền khi tải ảnh từ máy">
+                                <button type="button" class="btn btn-outline btn-sm" id="btn-trigger-upload-left" title="Chọn file ảnh từ máy" style="white-space:nowrap;padding:0 12px;font-size:0.82rem">
+                                    📁 Tải ảnh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="form-label" style="font-weight:700">Địa chỉ quầy thuốc <span style="color:#dc2626">*</span></label>
+                        <input type="text" id="prof-pharmacy-address" class="form-control" required placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố">
+                    </div>
+
+                    <div class="form-row-gps">
+                        <div class="field" style="margin-bottom:0">
+                            <label class="form-label" style="font-weight:700">Vĩ độ (Latitude)</label>
+                            <input type="number" step="0.00000001" id="prof-lat" class="form-control" placeholder="21.028511">
+                        </div>
+                        <div class="field" style="margin-bottom:0">
+                            <label class="form-label" style="font-weight:700">Kinh độ (Longitude)</label>
+                            <input type="number" step="0.00000001" id="prof-lng" class="form-control" placeholder="105.854444">
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-outline" id="btn-get-gps" style="width:100%;font-size:0.8rem;padding:9px 6px">
+                                📍 Lấy GPS
+                            </button>
+                        </div>
+                    </div>
+                    <div class="small muted" style="margin-top:4px;margin-bottom:18px">Tọa độ GPS giúp hệ thống tự động phân phối đơn thuốc gần nhất trong bán kính 3-5km.</div>
+
+                    <h3 style="font-size:1.05rem;font-weight:700;color:var(--primary-dark);margin-top:20px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)">
+                        🩺 Dược sĩ phụ trách chuyên môn
+                    </h3>
+
+                    <div class="form-row-2">
+                        <div class="field">
+                            <label class="form-label" style="font-weight:700">Họ và tên Dược sĩ <span style="color:#dc2626">*</span></label>
+                            <input type="text" id="prof-pharmacist-name" class="form-control" required style="font-weight:600">
+                        </div>
+                        <div class="field">
+                            <label class="form-label" style="font-weight:700">Email liên hệ</label>
+                            <input type="email" id="prof-pharmacist-email" class="form-control">
+                        </div>
+                    </div>
+                    <div class="field" style="margin-bottom:0">
+                        <label class="form-label" style="font-weight:700">SĐT tài khoản</label>
+                        <input type="text" id="prof-user-phone" class="form-control" disabled style="background:#f1f5f9;cursor:not-allowed">
+                        <div class="small muted" style="margin-top:2px">SĐT đăng nhập được quản lý bởi hệ thống xác thực.</div>
+                    </div>
+                </form>
+
+                <!-- Cột phải: Thẻ thẩm định & Thông tin hiển thị O2O -->
+                <div>
+                    <!-- Thẻ trạng thái thẩm định GPP -->
+                    <div class="portal-card" style="padding:20px;margin-bottom:18px;border-left:4px solid #16a34a">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                            <span class="badge badge-success" style="font-size:0.82rem;padding:4px 10px">
+                                ✓ ĐÃ THẨM ĐỊNH GPP
+                            </span>
+                            <span class="badge badge-warning" id="badge-pro-seller" style="font-size:0.82rem;padding:4px 10px;display:none">
+                                ⭐ ĐỐI TÁC PRO
+                            </span>
+                        </div>
+
+                        <div style="font-size:1.15rem;font-weight:800;color:#0f172a;margin-bottom:4px" id="preview-name">
+                            Nhà thuốc CareConnect
+                        </div>
+                        <div class="small muted" id="preview-address" style="margin-bottom:10px">
+                            Hà Nội
+                        </div>
+
+                        <div style="display:flex;align-items:center;gap:16px;padding:12px 0;border-top:1px dashed #cbd5e1;border-bottom:1px dashed #cbd5e1;margin-bottom:12px">
+                            <div>
+                                <span class="small muted" style="display:block">Đánh giá</span>
+                                <strong style="font-size:1.1rem;color:#d97706" id="preview-rating">⭐ 5.0</strong>
+                            </div>
+                            <div>
+                                <span class="small muted" style="display:block">Lượt phục vụ</span>
+                                <strong style="font-size:1.1rem;color:#0f172a" id="preview-rating-count">128 đơn</strong>
+                            </div>
+                            <div>
+                                <span class="small muted" style="display:block">Bán kính giao</span>
+                                <strong style="font-size:1.1rem;color:#16a34a">Hỏa tốc 5km</strong>
+                            </div>
+                        </div>
+
+                        <div style="background:#eff6ff;padding:12px;border-radius:8px;font-size:0.82rem;color:#1e40af;line-height:1.4">
+                            🎯 <strong>Quyền lợi đối tác chuẩn GPP:</strong>
+                            <ul style="margin:4px 0 0 16px;padding:0">
+                                <li>Tự động nhận đơn thuốc kê đơn từ Bác sĩ trong khu vực.</li>
+                                <li>Miễn phí cổng kết nối giao vận Ahamove & GrabExpress.</li>
+                                <li>Giải phóng tiền ký quỹ Escrow tức thì sau khi khách nhận hàng.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Thẻ Ảnh mặt tiền & Quầy thuốc -->
+                    <div class="portal-card" style="padding:18px">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                            <div style="font-weight:700;font-size:0.95rem;color:#0f172a;display:flex;align-items:center;gap:6px">
+                                <span>📸</span> Hình ảnh quầy thuốc & Mặt tiền
+                            </div>
+                            <span class="badge badge-neutral" style="font-size:0.75rem">Nhận diện O2O</span>
+                        </div>
+                        
+                        <div class="small muted" style="margin-bottom:12px;line-height:1.4">
+                            Ảnh chụp biển hiệu và mặt tiền nhà thuốc giúp bệnh nhân tin tưởng và Shipper dễ tìm đúng địa chỉ lấy hàng.
+                        </div>
+
+                        <!-- Khung ảnh xem trước -->
+                        <div style="height:190px;border-radius:10px;background:#f8fafc;display:flex;align-items:center;justify-content:center;overflow:hidden;border:2px dashed #cbd5e1;position:relative" id="storefront-box">
+                            <span class="muted small">Chưa có ảnh quầy thuốc</span>
+                        </div>
+
+                        <!-- Ẩn input file thực sự -->
+                        <input type="file" id="storefront-file-input" accept="image/png, image/jpeg, image/jpg, image/webp" style="display:none">
+
+                        <!-- Nút bấm upload -->
+                        <div style="margin-top:12px;display:flex;gap:8px">
+                            <button type="button" class="btn btn-primary" id="btn-upload-storefront" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;font-size:0.88rem;padding:9px 12px">
+                                <span>📤</span> Tải ảnh từ máy
+                            </button>
+                            <button type="button" class="btn btn-outline" id="btn-remove-storefront" style="display:none;font-size:0.88rem;padding:9px 12px;color:#dc2626;border-color:#fca5a5" title="Xóa ảnh hiện tại">
+                                ✕
+                            </button>
+                        </div>
+                        <div class="small muted" style="text-align:center;margin-top:6px;font-size:0.75rem">
+                            Hỗ trợ JPG, PNG, WEBP • Dung lượng tối đa 10MB
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../shared/js/api.js"></script>
+    <script src="../shared/js/realtime.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>
