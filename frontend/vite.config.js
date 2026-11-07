@@ -7,7 +7,7 @@ export default defineConfig({
     plugins: [react(), {
         name: 'careconnect-static-portals',
         closeBundle() {
-            for (const dir of ['buyer-family', 'pharmacy-portal', 'shared', 'uploads']) {
+            for (const dir of ['buyer-family', 'doctor-telehealth', 'pharmacy-portal', 'shared', 'uploads']) {
                 cpSync(fileURLToPath(new URL(`./${dir}`, import.meta.url)), fileURLToPath(new URL(`./dist/${dir}`, import.meta.url)), { recursive: true });
             }
         },

@@ -23,7 +23,7 @@
         e.preventDefault();
         errorBox.textContent = '';
         const data = CC.formData(form);
-        if (!data.phone || !data.password) {
+        if (!data.phone || !data.phone.trim() || !data.password) {
             errorBox.textContent = 'Vui lòng nhập số điện thoại và mật khẩu';
             return;
         }
@@ -33,7 +33,7 @@
                 const res = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone: data.phone, password: data.password }),
+                    body: JSON.stringify({ phone: data.phone.trim(), password: data.password }),
                 });
                 const body = await res.json().catch(() => ({}));
                 if (!res.ok) throw new Error(body.error || 'Đăng nhập không thành công');

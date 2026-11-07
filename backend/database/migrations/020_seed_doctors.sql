@@ -28,7 +28,7 @@ WITH d (phone, full_name, specialty, workplace, years_exp, bio, fee, modes, is_o
 new_users AS (
   INSERT INTO users (phone, password_hash, full_name, role)
   SELECT phone,
-         (SELECT password_hash FROM users WHERE id = 4),
+         crypt('12345', gen_salt('bf', 10)),
          full_name,
          'DOCTOR'::user_role_enum
   FROM d

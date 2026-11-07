@@ -2,7 +2,7 @@
 -- DỮ LIỆU MẪU KHỞI ĐẦU (chạy sau 001_init_schema.sql)
 -- Dùng để cả nhóm có chung tài khoản demo và danh mục tham chiếu.
 -- Khi nhóm thu thập xong ~50 sản phẩm thật (CSV), import bổ sung vào master_drugs.
--- Mật khẩu tất cả tài khoản demo: 123456
+-- Mật khẩu demo: 123456; riêng bacsi@gmail.com: 12345
 -- =============================================================================
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
@@ -68,7 +68,7 @@ INSERT INTO users (phone, email, password_hash, full_name, date_of_birth, gender
     ('0900000000', 'admin@careconnect.demo', crypt('123456', gen_salt('bf', 10)), 'Quản trị viên', NULL, NULL, 'ADMIN', 'STANDARD', 'VERIFIED'),
     ('0900000001', 'nam@careconnect.demo', crypt('123456', gen_salt('bf', 10)), 'Nguyễn Văn Nam', '1995-04-12', 'MALE', 'BUYER', 'STANDARD', 'VERIFIED'),
     ('0900000002', NULL, crypt('123456', gen_salt('bf', 10)), 'Trần Thị Lan', '1962-08-20', 'FEMALE', 'BUYER', 'SIMPLE', 'VERIFIED'),
-    ('0900000011', 'bs.hung@careconnect.demo', crypt('123456', gen_salt('bf', 10)), 'BS. Lê Văn Hùng', '1980-02-15', 'MALE', 'DOCTOR', 'STANDARD', 'VERIFIED'),
+    ('0900000011', 'bacsi@gmail.com', crypt('12345', gen_salt('bf', 10)), 'BS. Lê Văn Hùng', '1980-02-15', 'MALE', 'DOCTOR', 'STANDARD', 'VERIFIED'),
     ('0900000012', 'bs.mai@careconnect.demo', crypt('123456', gen_salt('bf', 10)), 'BS. Phạm Thị Mai', '1987-11-03', 'FEMALE', 'DOCTOR', 'STANDARD', 'VERIFIED'),
     ('0900000021', 'ds.minhtam@careconnect.demo', crypt('123456', gen_salt('bf', 10)), 'DS. Đỗ Minh Tâm', '1985-06-09', 'MALE', 'PHARMACIST', 'STANDARD', 'VERIFIED'),
     ('0900000022', 'ds.phucan@careconnect.demo', crypt('123456', gen_salt('bf', 10)), 'DS. Vũ Thị Phúc', '1990-01-25', 'FEMALE', 'PHARMACIST', 'STANDARD', 'VERIFIED'),
