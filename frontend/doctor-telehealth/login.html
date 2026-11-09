@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Đăng nhập Bác sĩ - CareConnect</title>
+    <link rel="stylesheet" href="../shared/css/base.css">
+    <link rel="stylesheet" href="css/doctor.css">
+</head>
+<body class="dr-login-body">
+    <div class="dr-disclaimer">Bản mô phỏng phục vụ học tập. Bác sĩ, phòng khám và đơn thuốc là dữ liệu giả, không dùng để tư vấn y tế thật.</div>
+    <div class="dr-login-wrap">
+        <main class="dr-login-card">
+            <div class="dr-brand">
+                <div class="dr-brand-logo">🩺</div>
+                <div><strong>CareConnect</strong><br><span>Cổng Bác sĩ</span></div>
+            </div>
+            <h1>Đăng nhập</h1>
+            <p class="dr-hint">Dùng số điện thoại và mật khẩu của tài khoản bác sĩ.</p>
+
+            <form id="login-form" class="dr-form" style="margin-top:18px" novalidate>
+                <div class="dr-field">
+                    <label for="phone">Số điện thoại</label>
+                    <input id="phone" name="phone" type="tel" inputmode="numeric" autocomplete="username" placeholder="0912000001" required>
+                </div>
+                <div class="dr-field">
+                    <label for="password">Mật khẩu</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password" required>
+                </div>
+                <p class="dr-error" id="login-error" role="alert"></p>
+                <button type="submit" class="btn btn-primary">Đăng nhập</button>
+            </form>
+        </main>
+    </div>
+
+    <script src="../shared/js/api.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#2563eb">
+    <title>Ví & Doanh thu - CareConnect Pharmacy Portal</title>
+    <link rel="stylesheet" href="../shared/css/base.css">
+    <link rel="stylesheet" href="css/portal.css">
+    <style>
+        .finance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .finance-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+        .finance-card.highlight {
+            border-color: #93c5fd;
+            background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
+        }
+        .finance-card-title {
+            font-size: 0.85rem;
+            color: var(--muted);
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .finance-card-val {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.2;
+            margin-bottom: 6px;
+        }
+        .finance-card-val.green {
+            color: #16a34a;
+        }
+        .finance-card-val.orange {
+            color: #d97706;
+        }
+        .finance-card-desc {
+            font-size: 0.78rem;
+            color: #64748b;
+        }
+        .tab-btn {
+            padding: 10px 18px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #64748b;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        .amount-pos {
+            color: #16a34a;
+            font-weight: 700;
+        }
+        .amount-neg {
+            color: #dc2626;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body class="portal-body">
+    <!-- Sidebar cố định -->
+    <aside class="portal-sidebar" id="portal-sidebar"></aside>
+
+    <!-- Khung chính -->
+    <div class="portal-main-wrapper">
+        <header class="portal-topbar" id="portal-topbar"></header>
+
+        <main class="portal-content-body">
+            <!-- Header tiêu đề trang -->
+            <div class="page-header-box" style="background:#ffffff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+                <div>
+                    <h2 style="font-size:1.25rem;font-weight:800;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:8px">
+                        <span>💰</span> Ví & Quản lý Doanh thu Nhà thuốc
+                    </h2>
+                    <p class="muted small" style="margin:0">
+                        Theo dõi số dư khả dụng, tiền ký quỹ Escrow bảo đảm, lịch sử đối soát chi tiết và tạo yêu cầu rút tiền về tài khoản ngân hàng.
+                    </p>
+                </div>
+                <div class="header-buttons" style="display:flex;gap:10px;align-items:center">
+                    <button type="button" class="btn btn-outline btn-sm" id="btn-seed-wallet" title="Nạp thử số dư và tạo giao dịch demo">
+                        ⚡ Dữ liệu mẫu demo
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btn-open-payout-modal">
+                        💸 Yêu cầu rút tiền
+                    </button>
+                </div>
+            </div>
+
+            <!-- Thống kê tài chính (4 Thẻ KPI) -->
+            <div class="finance-grid">
+                <div class="finance-card highlight">
+                    <div class="finance-card-title">
+                        <span>SỐ DƯ KHẢ DỤNG</span>
+                        <span style="font-size:1.2rem">💳</span>
+                    </div>
+                    <div class="finance-card-val green" id="stat-wallet-balance">0 đ</div>
+                    <div class="finance-card-desc">Sẵn sàng rút về tài khoản ngân hàng</div>
+                </div>
+
+                <div class="finance-card">
+                    <div class="finance-card-title">
+                        <span>KÝ QUỸ ESCROW ĐANG GIỮ</span>
+                        <span style="font-size:1.2rem">⏳</span>
+                    </div>
+                    <div class="finance-card-val orange" id="stat-escrow-balance">0 đ</div>
+                    <div class="finance-card-desc" id="stat-escrow-desc">Đơn đang giao, giải phóng khi khách nhận</div>
+                </div>
+
+                <div class="finance-card">
+                    <div class="finance-card-title">
+                        <span>DOANH THU THỰC NHẬN</span>
+                        <span style="font-size:1.2rem">📈</span>
+                    </div>
+                    <div class="finance-card-val" id="stat-total-earned">0 đ</div>
+                    <div class="finance-card-desc" id="stat-completed-desc">Từ 0 đơn hàng hoàn tất</div>
+                </div>
+
+                <div class="finance-card">
+                    <div class="finance-card-title">
+                        <span>CHIẾT KHẤU SÀN CARECONNECT</span>
+                        <span style="font-size:1.2rem">🏷️</span>
+                    </div>
+                    <div class="finance-card-val" id="stat-total-commission" style="color:#64748b">0 đ</div>
+                    <div class="finance-card-desc">Phí dịch vụ nền tảng & hạ tầng O2O</div>
+                </div>
+            </div>
+
+            <!-- Khối Bảng Danh sách: Tabs Đối soát & Yêu cầu rút tiền -->
+            <div class="portal-card" style="padding:0;overflow:hidden">
+                <div style="display:flex;border-bottom:1px solid var(--border);padding:0 16px;background:#f8fafc;justify-content:space-between;align-items:center;flex-wrap:wrap">
+                    <div style="display:flex;gap:8px">
+                        <button type="button" class="tab-btn active" id="tab-btn-tx">
+                            📜 Lịch sử biến động số dư (Đối soát)
+                        </button>
+                        <button type="button" class="tab-btn" id="tab-btn-payouts">
+                            🏦 Lịch sử rút tiền về ngân hàng
+                        </button>
+                    </div>
+                    <div style="padding:8px 0" id="tx-filter-wrapper">
+                        <select id="select-tx-type" class="input" style="font-size:0.85rem;padding:6px 12px;background:#fff;border-radius:6px">
+                            <option value="ALL">-- Tất cả loại giao dịch --</option>
+                            <option value="ESCROW_RELEASE">✓ Tiền vào từ đơn hàng (Escrow Release)</option>
+                            <option value="PAYOUT_RELEASE">💸 Rút tiền về ngân hàng (Payout)</option>
+                            <option value="REFUND">↩️ Hoàn tiền cọc</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Bảng 1: Lịch sử biến động số dư -->
+                <div id="panel-tab-tx">
+                    <div class="table-responsive">
+                        <table class="portal-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:160px">Thời gian</th>
+                                    <th style="width:160px">Loại biến động</th>
+                                    <th style="width:150px">Đơn hàng đối soát</th>
+                                    <th style="width:150px;text-align:right">Số tiền</th>
+                                    <th style="width:150px;text-align:right">Số dư ví sau GD</th>
+                                    <th>Diễn giải chi tiết</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-transactions">
+                                <tr><td colspan="6" class="center muted" style="padding:24px">Đang tải lịch sử giao dịch...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-top:1px solid var(--border);background:#f8fafc">
+                        <span class="small muted" id="tx-pagination-info">Hiển thị 0 giao dịch</span>
+                        <div style="display:flex;gap:6px">
+                            <button type="button" class="btn btn-outline btn-sm" id="btn-tx-prev" disabled>← Trang trước</button>
+                            <button type="button" class="btn btn-outline btn-sm" id="btn-tx-next" disabled>Trang sau →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bảng 2: Lịch sử yêu cầu rút tiền -->
+                <div id="panel-tab-payouts" style="display:none">
+                    <div class="table-responsive">
+                        <table class="portal-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:120px">Mã yêu cầu</th>
+                                    <th style="width:160px">Thời gian gửi</th>
+                                    <th style="width:150px;text-align:right">Số tiền rút</th>
+                                    <th>Tài khoản ngân hàng thụ hưởng</th>
+                                    <th style="width:150px">Trạng thái</th>
+                                    <th style="width:180px">Thời gian xử lý</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-payouts">
+                                <tr><td colspan="6" class="center muted" style="padding:24px">Đang tải danh sách rút tiền...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Yêu cầu rút tiền -->
+    <div id="modal-payout" class="portal-modal-backdrop" style="display:none">
+        <div class="portal-modal-content" style="max-width:520px;background:#ffffff;border-radius:16px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);overflow:hidden">
+            <div class="portal-modal-header" style="background:#f8fafc;padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+                <h3 style="font-size:1.1rem;font-weight:700;color:#0f172a;margin:0;display:flex;align-items:center;gap:8px">
+                    <span>💸</span> Tạo yêu cầu rút tiền về ngân hàng
+                </h3>
+                <button type="button" class="btn btn-outline btn-sm btn-close-payout" style="padding:2px 8px;border:none;font-size:1.1rem">✕</button>
+            </div>
+
+            <form id="form-payout" style="margin:0">
+                <div class="portal-modal-body" style="padding:20px;background:#ffffff">
+                    <!-- Banner số dư khả dụng -->
+                    <div style="background:#f0fdf4;border:1px solid #bbf7d0;padding:14px;border-radius:8px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center">
+                        <div>
+                            <div class="small" style="color:#166534;font-weight:600">Số dư khả dụng hiện tại:</div>
+                            <strong style="font-size:1.35rem;color:#15803d" id="modal-avail-balance">0 đ</strong>
+                        </div>
+                        <button type="button" class="btn btn-outline btn-sm" id="btn-withdraw-all" style="font-size:0.8rem;background:#ffffff;border-color:#86efac;color:#15803d;font-weight:700">
+                            Rút tối đa
+                        </button>
+                    </div>
+
+                    <div class="field">
+                        <label class="form-label" style="font-weight:700;font-size:0.88rem">Số tiền cần rút (VNĐ) <span style="color:#dc2626">*</span></label>
+                        <input type="number" id="payout-amount" class="form-control" placeholder="Nhập số tiền (tối thiểu 50.000 đ)" min="50000" step="any" required style="font-weight:700;font-size:1.05rem;color:var(--primary-dark)">
+                        <div class="small muted" style="margin-top:4px">Số tiền rút tối thiểu là 50.000 VNĐ. Có thể rút số tiền lẻ tùy ý.</div>
+                    </div>
+
+                    <div class="field">
+                        <label class="form-label" style="font-weight:700;font-size:0.88rem">Ngân hàng thụ hưởng <span style="color:#dc2626">*</span></label>
+                        <select id="payout-bank-name" class="form-control" required style="font-size:0.9rem">
+                            <option value="">-- Chọn ngân hàng --</option>
+                            <option value="Vietcombank" selected>Vietcombank (Ngân hàng TMCP Ngoại thương VN)</option>
+                            <option value="MB Bank">MB Bank (Ngân hàng Quân Đội)</option>
+                            <option value="Techcombank">Techcombank (Ngân hàng Kỹ Thương VN)</option>
+                            <option value="VietinBank">VietinBank (Ngân hàng Công Thương VN)</option>
+                            <option value="BIDV">BIDV (Ngân hàng Đầu tư và Phát triển VN)</option>
+                            <option value="VPBank">VPBank (Ngân hàng Việt Nam Thịnh Vượng)</option>
+                            <option value="ACB">ACB (Ngân hàng Á Châu)</option>
+                            <option value="TPBank">TPBank (Ngân hàng Tiên Phong)</option>
+                            <option value="Agribank">Agribank (Ngân hàng Nông nghiệp & PTNT)</option>
+                            <option value="VIB">VIB (Ngân hàng Quốc Tế)</option>
+                            <option value="Sacombank">Sacombank (Ngân hàng Sài Gòn Thương Tín)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="field">
+                            <label class="form-label" style="font-weight:700;font-size:0.88rem">Số tài khoản <span style="color:#dc2626">*</span></label>
+                            <input type="text" id="payout-acc-number" class="form-control" placeholder="Số tài khoản ngân hàng" value="0011001234567" required style="font-family:monospace;font-weight:700">
+                        </div>
+                        <div class="field">
+                            <label class="form-label" style="font-weight:700;font-size:0.88rem">Tên chủ tài khoản <span style="color:#dc2626">*</span></label>
+                            <input type="text" id="payout-acc-holder" class="form-control" placeholder="NGUYEN THI DUOC SI" value="NGUYEN THI DUOC SI" required style="text-transform:uppercase;font-weight:700">
+                        </div>
+                    </div>
+
+                    <div style="background:#f8fafc;border:1px dashed #cbd5e1;padding:12px;border-radius:8px;font-size:0.78rem;color:#475569;line-height:1.4">
+                        ℹ️ <strong>Chính sách quyết toán:</strong>
+                        <ul style="margin:4px 0 0 16px;padding:0">
+                            <li>Lệnh rút tiền sẽ được xử lý trong vòng <strong>24 giờ làm việc</strong>.</li>
+                            <li>Miễn phí 100% phí chuyển khoản cho Nhà thuốc đạt chuẩn GPP trên CareConnect.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="portal-modal-footer" style="padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;background:#f8fafc">
+                    <button type="button" class="btn btn-secondary btn-close-payout">Đóng</button>
+                    <button type="submit" class="btn btn-primary" id="btn-submit-payout">
+                        Xác nhận gửi yêu cầu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../shared/js/api.js"></script>
+    <script src="../shared/js/realtime.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/wallet.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+/* Cổng chọn phân hệ. Màu và font theo bộ chung của hệ thống (frontend/shared/css/base.css). */
+.cc-portal {
+    --primary: #2563eb; --primary-dark: #1d4ed8; --primary-soft: #dbeafe; --primary-softer: #eff6ff;
+    --bg: #f5f7fb; --text: #1e293b; --muted: #64748b; --border: #e2e8f0;
+    min-height: 100vh; background: var(--bg); color: var(--text);
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 15px;
+}
+.cc-portal header { display: flex; align-items: center; gap: 12px; padding: 16px 24px; background: #fff; border-bottom: 1px solid var(--border); }
+.cc-portal .cc-mark { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 11px; background: var(--primary); color: #fff; }
+.cc-portal header strong { font-size: 20px; color: var(--primary); }
+.cc-portal header span { color: var(--muted); }
+.cc-portal main { max-width: 1100px; margin: auto; padding: 40px 24px; }
+.cc-portal h1 { margin: 0 0 6px; font-size: 26px; }
+.cc-portal main > p { margin: 0; color: var(--muted); }
+.cc-portal nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px; margin-top: 28px; }
+.cc-portal nav a {
+    display: flex; flex-direction: column; gap: 8px; padding: 22px; background: #fff;
+    border: 1px solid var(--border); border-radius: 14px; color: inherit; text-decoration: none;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 2px 8px rgba(16, 24, 40, 0.06);
+}
+.cc-portal nav a:hover { border-color: var(--primary); }
+.cc-portal nav a.primary { border-color: var(--primary); background: var(--primary-softer); }
+.cc-portal nav h2 { margin: 0; font-size: 18px; color: var(--text); }
+.cc-portal nav p { margin: 0; color: var(--muted); line-height: 1.55; }
+.cc-portal nav a > span:last-child { margin-top: auto; color: var(--primary); font-weight: 600; }
+.cc-portal .cc-icon { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: var(--primary-soft); color: var(--primary); }
+.cc-portal a:focus-visible, .cc-home:focus-visible { outline: 3px solid #93c5fd; outline-offset: 4px; }
+.cc-home { display: block; padding: 12px 24px; color: #2563eb; background: #fff; border-bottom: 1px solid #e2e8f0; text-decoration: none; font-weight: 600; font-family: "Segoe UI", Roboto, Arial, sans-serif; }

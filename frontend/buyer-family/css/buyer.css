@@ -1,0 +1,187 @@
+/* Phân hệ Người mua - Family Care */
+
+/* ---------------------------------------------------------------- Chế độ Bố mẹ (đơn giản hóa) */
+body.simple { font-size: 18px; }
+body.simple .btn { min-height: 50px; font-size: 1.05rem; }
+body.simple .btn-sm { min-height: 42px; font-size: 0.95rem; }
+body.simple .input, body.simple .select, body.simple .textarea { min-height: 52px; font-size: 1.05rem; }
+body.simple .tab { font-size: 13px; }
+body.simple .tab .icon { width: 28px; height: 28px; }
+body.simple .topbar-title { font-size: 1.25rem; }
+body.simple .badge { font-size: 0.9rem; padding: 4px 12px; }
+
+/* ---------------------------------------------------------------- Trang chủ */
+.hello h1 { font-size: 1.35rem; }
+.hello p { margin-top: 4px; }
+
+.search-box {
+    display: flex; align-items: center; gap: 10px;
+    margin-top: 16px; padding: 0 6px 0 14px; min-height: 50px;
+    background: #fff; border-radius: 12px; color: var(--muted);
+}
+.search-box input { flex: 1; min-width: 0; border: 0; outline: none; font: inherit; color: var(--text); background: transparent; }
+
+.service-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (min-width: 640px) { .service-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1200px) { .service-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+.service-card {
+    position: relative;
+    display: flex; flex-direction: column; gap: 8px;
+    padding: 14px; min-height: 124px;
+    border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); text-align: left; font: inherit; cursor: pointer;
+}
+.service-card:hover { border-color: var(--primary); text-decoration: none; box-shadow: var(--shadow); }
+.service-card .service-icon {
+    display: flex; align-items: center; justify-content: center;
+    width: 42px; height: 42px; border-radius: 12px; background: var(--primary-soft); color: var(--primary);
+}
+.service-card .service-title { font-weight: 700; line-height: 1.3; }
+.service-card .service-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.35; }
+.service-card .badge { position: absolute; top: 10px; right: 10px; font-size: 0.7rem; padding: 1px 8px; }
+.service-card.soon .service-icon { background: #eef1f5; color: #8a97a8; }
+/* Chế độ Đơn giản: 2 cột, nút to, ẩn mô tả cho đỡ rối */
+body.simple .service-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 900px) { body.simple .service-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+body.simple .service-card { min-height: 140px; align-items: center; justify-content: center; text-align: center; padding-top: 40px; }
+body.simple .service-card .service-icon { width: 52px; height: 52px; }
+body.simple .service-card .service-icon .icon { width: 28px; height: 28px; }
+body.simple .service-card .service-title { font-size: 1.1rem; }
+body.simple .service-card .service-desc { display: none; }
+
+.member-card { display: flex; flex-direction: column; gap: 14px; }
+.member-head { display: flex; align-items: center; gap: 12px; }
+.member-head h3 { font-size: 1.05rem; }
+
+.dose-mini { display: flex; flex-direction: column; gap: 8px; }
+.dose-mini-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border-radius: var(--radius-sm); background: var(--primary-softer);
+}
+.dose-mini-time { font-weight: 700; color: var(--primary); width: 46px; flex: none; }
+
+.order-card { display: flex; flex-direction: column; gap: 10px; }
+.order-items { font-size: 0.9rem; color: var(--muted); }
+
+/* ---------------------------------------------------------------- Bố mẹ: thẻ liều thuốc lớn */
+.dose-big {
+    display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; align-items: center;
+    padding: 18px; border-radius: 18px;
+    background: var(--surface); border: 2px solid var(--border);
+}
+.dose-big.is-due { border-color: var(--warning); background: #fffaf2; }
+.dose-big.is-missed { border-color: #f4b4ae; }
+.dose-big.is-taken { border-color: #b7e4c7; background: #f6fcf8; }
+.dose-big-time { grid-row: span 2; font-size: 1.8rem; font-weight: 800; color: var(--primary); }
+.dose-big-name { font-size: 1.2rem; font-weight: 700; }
+.dose-big-meta { color: var(--muted); }
+.dose-big-action { grid-column: 1 / -1; margin-top: 8px; }
+.dose-big-action .btn { width: 100%; min-height: 60px; font-size: 1.25rem; }
+.dose-big-done { display: flex; align-items: center; gap: 8px; color: var(--success); font-weight: 700; font-size: 1.1rem; }
+
+.parent-actions { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 640px) { .parent-actions { grid-template-columns: 1fr 1fr; } }
+.parent-actions .btn { min-height: 72px; font-size: 1.2rem; border-radius: 18px; }
+.parent-actions .icon { width: 28px; height: 28px; }
+
+/* ---------------------------------------------------------------- Chuông báo (modal) */
+.ring-modal { text-align: center; }
+.ring { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.ring-bell {
+    display: flex; align-items: center; justify-content: center;
+    width: 84px; height: 84px; border-radius: 50%;
+    background: var(--primary-soft); color: var(--primary);
+    animation: bell-shake 1.2s ease-in-out infinite;
+}
+.ring-bell .icon { width: 42px; height: 42px; }
+.ring-bell-warn { background: var(--danger-soft); color: var(--danger); animation: none; }
+.ring-time { font-size: 2.6rem; font-weight: 800; color: var(--primary); line-height: 1; }
+.ring-drug { font-size: 1.4rem; }
+.ring-dose { font-size: 1.1rem; color: var(--muted); margin-bottom: 8px; }
+.ring-img { max-height: 120px; border-radius: 12px; }
+.ring-taken { min-height: 64px; font-size: 1.3rem; }
+@keyframes bell-shake {
+    0%, 50%, 100% { transform: rotate(0); }
+    10%, 30% { transform: rotate(-14deg); }
+    20%, 40% { transform: rotate(14deg); }
+}
+
+/* ---------------------------------------------------------------- Lịch thuốc */
+.patient-switch { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+.patient-switch::-webkit-scrollbar { display: none; }
+
+.timeline { display: flex; flex-direction: column; }
+.timeline-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px dashed var(--border); align-items: center; }
+.timeline-item:last-child { border-bottom: 0; }
+.timeline-time { width: 54px; flex: none; font-size: 1.1rem; font-weight: 700; color: var(--primary); }
+
+.part-title { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin: 6px 0 2px; }
+
+.reminder-item { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.reminder-item:last-child { border-bottom: 0; }
+.reminder-icon {
+    display: flex; align-items: center; justify-content: center; flex: none;
+    width: 42px; height: 42px; border-radius: 12px; background: var(--primary-soft); color: var(--primary);
+}
+.reminder-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+
+.time-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* Biểu đồ tuân thủ 7 ngày */
+.week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; align-items: end; }
+.week-day { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 0.78rem; color: var(--muted); }
+.week-bar { position: relative; width: 100%; max-width: 34px; height: 84px; border-radius: 8px; background: #e9eff7; overflow: hidden; }
+.week-bar > span { position: absolute; left: 0; right: 0; bottom: 0; background: var(--success); border-radius: 8px; }
+.week-bar.low > span { background: var(--warning); }
+.week-bar.none > span { background: transparent; }
+.week-value { font-weight: 700; color: var(--text); }
+
+/* ---------------------------------------------------------------- Gia đình */
+.qr-box {
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    padding: 20px; border-radius: var(--radius); background: var(--primary-softer); text-align: center;
+}
+.qr-canvas { padding: 12px; background: #fff; border-radius: 12px; line-height: 0; }
+.qr-canvas img, .qr-canvas canvas { width: 196px; height: 196px; }
+.invite-code { font-size: 2rem; font-weight: 800; letter-spacing: 0.25em; color: var(--primary); font-family: Consolas, "Courier New", monospace; }
+.code-input { text-align: center; font-size: 1.6rem !important; letter-spacing: 0.3em; text-transform: uppercase; font-family: Consolas, "Courier New", monospace; }
+#qr-reader { width: 100%; border-radius: 12px; overflow: hidden; }
+
+.info-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.info-item { padding: 10px 12px; border-radius: var(--radius-sm); background: var(--primary-softer); }
+.info-item .label { font-weight: 500; color: var(--muted); font-size: 0.78rem; }
+.info-item .value { font-weight: 600; }
+.info-item.full { grid-column: 1 / -1; }
+
+/* ---------------------------------------------------------------- Thông báo */
+.noti { display: flex; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--border); cursor: pointer; }
+.noti:last-child { border-bottom: 0; }
+.noti:hover { background: var(--primary-softer); }
+.noti.unread { background: #f5f9ff; }
+.noti-icon {
+    display: flex; align-items: center; justify-content: center; flex: none;
+    width: 40px; height: 40px; border-radius: 50%; background: var(--primary-soft); color: var(--primary);
+}
+.noti-icon.warn { background: var(--danger-soft); color: var(--danger); }
+.noti-icon.ok { background: var(--success-soft); color: var(--success); }
+.noti-icon.order { background: var(--warning-soft); color: var(--warning); }
+.noti-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--primary); flex: none; margin-top: 6px; }
+
+/* ---------------------------------------------------------------- Tài khoản */
+.profile-head { display: flex; align-items: center; gap: 16px; }
+.mode-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.mode-option {
+    display: flex; flex-direction: column; gap: 6px; padding: 14px;
+    border: 2px solid var(--border); border-radius: var(--radius); background: var(--surface);
+    font: inherit; text-align: left; cursor: pointer; color: var(--text);
+}
+.mode-option.active { border-color: var(--primary); background: var(--primary-softer); }
+.mode-option .icon { color: var(--primary); }
+.mode-option .preview-big { font-size: 1.3rem; font-weight: 700; }
+
+.address-item { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.address-item:last-child { border-bottom: 0; }
+
+.coin { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: rgba(255, 255, 255, 0.2); font-weight: 600; }
+
+.demo-accounts { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }

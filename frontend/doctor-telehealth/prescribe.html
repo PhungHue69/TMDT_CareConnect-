@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hàng chờ khám - Cổng Bác sĩ CareConnect</title>
+    <link rel="stylesheet" href="../shared/css/base.css">
+    <link rel="stylesheet" href="css/doctor.css">
+</head>
+<body class="dr-body">
+    <div class="dr-shell">
+        <aside id="dr-sidebar" class="dr-sidebar"></aside>
+        <div class="dr-main">
+            <header id="dr-topbar" class="dr-topbar"></header>
+            <main class="dr-content">
+                <section class="dr-card" aria-labelledby="h-queue">
+                    <h3 id="h-queue">Danh sách ca khám</h3>
+                    <div id="queue-box"><p>Đang tải...</p></div>
+                </section>
+
+                <section class="dr-card" id="rx-box" style="display:none" aria-label="Kê đơn điện tử"></section>
+            </main>
+        </div>
+    </div>
+
+    <script src="../shared/js/api.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/queue.js"></script>
+</body>
+</html>

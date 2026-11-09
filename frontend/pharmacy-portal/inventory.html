@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#2563eb">
+    <title>Quản lý kho thuốc - CareConnect Pharmacy Portal</title>
+    <link rel="stylesheet" href="../shared/css/base.css">
+    <link rel="stylesheet" href="css/portal.css">
+    <style>
+        .filter-bar {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+        .filter-search-box {
+            flex: 1;
+            min-width: 250px;
+        }
+        .drug-thumbnail {
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .stock-pill {
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        .stock-pill.low {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+        .stock-pill.ok {
+            background: #dcfce7;
+            color: #15803d;
+        }
+        .stock-pill.zero {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+        .clickable-card {
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .clickable-card:hover {
+            border-color: var(--primary);
+        }
+        .clickable-card.active-filter {
+            border-color: var(--primary);
+            background: var(--primary-softer);
+        }
+    </style>
+</head>
+<body class="portal-body">
+    <!-- Sidebar -->
+    <aside class="portal-sidebar" id="portal-sidebar"></aside>
+
+    <!-- Khung chính -->
+    <div class="portal-main-wrapper">
+        <header class="portal-topbar" id="portal-topbar"></header>
+
+        <main class="portal-content-body">
+            <!-- Tiêu đề trang & Nút hành động -->
+            <div class="page-header-box" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+                <div>
+                    <h2 style="font-size:1.3rem;font-weight:700;margin:0">Quản lý kho thuốc & Giá bán</h2>
+                    <p class="muted small" style="margin-top:2px">Quản lý định mức tồn kho, cập nhật giá bán niêm yết và hạn sử dụng</p>
+                </div>
+                <div class="header-buttons">
+                    <button class="btn btn-primary" id="btn-add-drug">
+                        + Thêm thuốc vào kho
+                    </button>
+                </div>
+            </div>
+
+            <!-- Thống kê kho mini -->
+            <div class="kpi-grid" style="margin-bottom:20px">
+                <div class="kpi-card clickable-card" id="card-filter-all">
+                    <span class="kpi-card-title">Tổng mặt hàng</span>
+                    <div class="kpi-card-value" id="stat-total">-</div>
+                    <div class="kpi-card-footer">Trong danh mục nhà thuốc</div>
+                </div>
+                <div class="kpi-card clickable-card" id="card-filter-instock">
+                    <span class="kpi-card-title">Đang có hàng</span>
+                    <div class="kpi-card-value" style="color:var(--success)" id="stat-instock">-</div>
+                    <div class="kpi-card-footer">Sẵn sàng xuất bán</div>
+                </div>
+                <div class="kpi-card clickable-card" id="card-filter-low">
+                    <span class="kpi-card-title">Sắp hết hàng (≤ 10)</span>
+                    <div class="kpi-card-value" style="color:var(--danger)" id="stat-low">-</div>
+                    <div class="kpi-card-footer">Cần nhập bổ sung gấp</div>
+                </div>
+                <div class="kpi-card clickable-card" id="card-filter-expiring">
+                    <span class="kpi-card-title">Cận date (≤ 90 ngày)</span>
+                    <div class="kpi-card-value" style="color:var(--warning)" id="stat-expiring">-</div>
+                    <div class="kpi-card-footer">Cần ưu tiên xuất bán</div>
+                </div>
+            </div>
+
+            <!-- Thanh tìm kiếm & Bộ lọc -->
+            <div class="filter-bar">
+                <div class="filter-search-box">
+                    <input class="input" id="filter-search" type="search" placeholder="🔍 Tìm tên thuốc, hoạt chất, số đăng ký..." autocomplete="off">
+                </div>
+                <div style="min-width:160px">
+                    <select class="input" id="filter-type">
+                        <option value="">Tất cả phân loại</option>
+                        <option value="RX">Thuốc kê đơn (RX)</option>
+                        <option value="OTC">Không kê đơn (OTC)</option>
+                        <option value="SUPPLEMENT">Thực phẩm chức năng</option>
+                        <option value="DEVICE">Thiết bị y tế</option>
+                    </select>
+                </div>
+                <div style="min-width:160px">
+                    <select class="input" id="filter-status">
+                        <option value="">Tất cả tình trạng</option>
+                        <option value="IN_STOCK">Còn hàng</option>
+                        <option value="OUT_OF_STOCK">Hết hàng</option>
+                        <option value="DISCONTINUED">Ngừng kinh doanh</option>
+                    </select>
+                </div>
+                <div style="min-width:180px">
+                    <select class="input" id="filter-category">
+                        <option value="">Tất cả nhóm bệnh / danh mục</option>
+                    </select>
+                </div>
+                <button class="btn btn-outline btn-sm" id="btn-reset-filters" title="Xóa bộ lọc">
+                    Đặt lại
+                </button>
+            </div>
+
+            <!-- Bảng danh sách tồn kho -->
+            <div class="portal-card">
+                <div class="table-responsive">
+                    <table class="portal-table">
+                        <thead>
+                            <tr>
+                                <th style="width:300px">Sản phẩm & Hoạt chất</th>
+                                <th>Phân loại</th>
+                                <th>Đơn vị</th>
+                                <th>Giá bán (VNĐ)</th>
+                                <th>Tồn kho</th>
+                                <th>Hạn sử dụng</th>
+                                <th>Trạng thái</th>
+                                <th style="text-align:right">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-table-body">
+                            <tr><td colspan="8" class="center muted" style="padding:40px">Đang tải dữ liệu kho thuốc...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Phân trang & Tổng số -->
+                <div style="padding:14px 20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:#fafbfc">
+                    <span class="small muted" id="pagination-info">Hiển thị 0 sản phẩm</span>
+                    <div style="display:flex;gap:8px" id="pagination-controls">
+                        <!-- Nút trang -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../shared/js/api.js"></script>
+    <script src="../shared/js/realtime.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/inventory.js"></script>
+</body>
+</html>

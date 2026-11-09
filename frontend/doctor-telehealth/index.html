@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tổng quan - Cổng Bác sĩ CareConnect</title>
+    <link rel="stylesheet" href="../shared/css/base.css">
+    <link rel="stylesheet" href="css/doctor.css">
+</head>
+<body class="dr-body">
+    <div class="dr-shell">
+        <aside id="dr-sidebar" class="dr-sidebar"></aside>
+        <div class="dr-main">
+            <header id="dr-topbar" class="dr-topbar"></header>
+            <main class="dr-content">
+                <section class="dr-card" aria-labelledby="h-profile">
+                    <h3 id="h-profile">Hồ sơ của bạn</h3>
+                    <div id="profile-card" class="dr-profile"></div>
+                </section>
+
+                <section class="dr-card" aria-labelledby="h-online">
+                    <h3 id="h-online">Nhận khám</h3>
+                    <div class="dr-online">
+                        <div>
+                            <div id="online-label" style="font-weight:600"></div>
+                            <p class="dr-hint" id="online-hint"></p>
+                        </div>
+                        <label class="dr-switch" aria-label="Bật hoặc tắt nhận khám">
+                            <input type="checkbox" id="online-toggle">
+                            <span class="track"></span>
+                        </label>
+                    </div>
+                </section>
+
+                <section class="dr-card" aria-labelledby="h-settings">
+                    <h3 id="h-settings">Phí khám và hình thức khám</h3>
+                    <form id="settings-form" class="dr-form" novalidate>
+                        <div class="dr-field">
+                            <label for="fee">Phí mỗi lượt khám (đồng)</label>
+                            <input id="fee" name="fee" type="number" min="5000" max="30000" step="1000" required>
+                            <p class="dr-hint">Từ 5.000đ đến 30.000đ. Phí được chốt vào từng ca tại thời điểm bệnh nhân đặt khám.</p>
+                        </div>
+                        <div class="dr-field">
+                            <span class="label">Hình thức khám</span>
+                            <div class="dr-checks" id="modes">
+                                <label><input type="checkbox" name="modes" value="CHAT"> Chat</label>
+                                <label><input type="checkbox" name="modes" value="AUDIO"> Gọi thoại</label>
+                                <label><input type="checkbox" name="modes" value="VIDEO"> Gọi video</label>
+                            </div>
+                        </div>
+                        <div class="dr-field">
+                            <label for="bio">Giới thiệu ngắn</label>
+                            <textarea id="bio" name="bio" maxlength="1000" placeholder="Kinh nghiệm và lĩnh vực bạn tư vấn"></textarea>
+                        </div>
+                        <p class="dr-error" id="settings-error" role="alert"></p>
+                        <div><button type="submit" class="btn btn-primary">Lưu thay đổi</button></div>
+                    </form>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="../shared/js/api.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -25,4 +25,16 @@ out/
 !.vscode/extensions.json
 .idea/
 .DS_Store
+data/demo/
 Thumbs.db
+
+/scripts
+
+# File upload tạm thời của người dùng
+backend/o2o.db
+backend/o2o.db-*
+frontend/uploads/storefront/*
+!frontend/uploads/storefront/.gitkeep
+
+# Ảnh đơn thuốc người dùng gửi (dữ liệu sức khỏe, không đưa lên Git)
+frontend/uploads/prescriptions/
