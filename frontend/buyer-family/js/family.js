@@ -242,7 +242,7 @@
                 <button class="btn btn-sm btn-outline" id="copy-link">Sao chép link mời</button>
             </div>`;
         if (window.QRCode) {
-            new window.QRCode(CC.$('#qr-canvas'), { text: joinUrl, width: 196, height: 196, colorDark: '#1557b0', colorLight: '#ffffff' });
+            new window.QRCode(CC.$('#qr-canvas'), { text: joinUrl, width: 196, height: 196, colorDark: '#1d4ed8', colorLight: '#ffffff' });
         } else {
             CC.$('#qr-canvas').innerHTML = '<p class="small muted" style="line-height:1.4;padding:20px">Không tải được thư viện QR (cần Internet). Hãy dùng mã 6 ký tự.</p>';
         }

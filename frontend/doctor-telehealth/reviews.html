@@ -4,23 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Đánh giá</title>
-<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../shared/css/base.css">
 <link rel="stylesheet" href="css/doctor.css">
 <style>
-  .tp-wrap { max-width: 900px; margin: 0 auto; padding: 16px; }
-  .tp-summary { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; margin-bottom: 16px; font-size: 18px; }
-  .tp-review { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px; margin-bottom: 10px; }
-  .tp-review small { color: #6b7280; }
+  
+  .tp-summary { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; font-size: 18px; }
+  .tp-review { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 10px; }
+  .tp-review small { color: var(--muted); }
   .tp-stars { color: #f59e0b; letter-spacing: 2px; }
 </style>
 </head>
-<body>
-<div id="app" class="tp-wrap">
-  <h2>⭐ Đánh giá của bệnh nhân</h2>
+<body class="dr-body">
+<div class="dr-shell">
+<aside id="dr-sidebar" class="dr-sidebar"></aside>
+<div class="dr-main">
+<header id="dr-topbar" class="dr-topbar"></header>
+<main class="dr-content">
+<div id="app">
   <div class="tp-summary" id="summary">Đang tải...</div>
   <div id="list"></div>
 </div>
-<script src="js/api.js"></script>
+</main>
+</div>
+</div>
+<script src="../shared/js/api.js"></script>
 <script src="js/layout.js"></script>
 <script src="js/reviews.js"></script>
 </body>

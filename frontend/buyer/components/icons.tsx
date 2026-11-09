@@ -7,7 +7,7 @@ export const PinIcon = ({ className = "h-5 w-5" }: P) => <svg {...base} classNam
 export const OrderIcon = ({ className = "h-5 w-5" }: P) => <svg {...base} className={className}><rect x="5" y="3" width="14" height="18" rx="2" /><path d="M9 8h6M9 12h6M9 16h4" /></svg>;
 export const CartIcon = ({ className = "h-5 w-5" }: P) => <svg {...base} className={className}><path d="M3 4h2l2.4 11.2a1 1 0 0 0 1 .8h8.9a1 1 0 0 0 1-.8L20 8H6.2" /><circle cx="9" cy="20" r="1.4" /><circle cx="17" cy="20" r="1.4" /></svg>;
 export const UserIcon = ({ className = "h-5 w-5" }: P) => <svg {...base} className={className}><circle cx="12" cy="8" r="4" /><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" /></svg>;
-export const SearchIcon = ({ className = "h-5 w-5" }: P) => <svg {...base} className={className}><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>;
+export const SearchIcon =({ className = "h-5 w-5" }: P) => <svg {...base} className={className}><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>;
 export const GpsIcon = ({ className = "h-5 w-5" }: P) => <svg {...base} className={className}><circle cx="12" cy="12" r="7" /><circle cx="12" cy="12" r="2.6" fill="currentColor" stroke="none" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3" /></svg>;
 export const ChevronIcon = ({ className = "h-4 w-4" }: P) => <svg {...base} className={className}><path d="m6 9 6 6 6-6" /></svg>;
 export const NavigateIcon = ({ className = "h-4 w-4" }: P) => <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}><path d="M21 3 3 10.5l7.5 2.9L13.4 21z" /></svg>;

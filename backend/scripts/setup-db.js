@@ -53,27 +53,39 @@ async function setup() {
             WHERE table_schema = 'public' AND table_name = 'users'
         `);
 
+        const migrationsDir = path.join(__dirname, '..', 'database', 'migrations');
+        const run = async (file) => {
+            console.log(`  -> Đang thực thi: ${file}...`);
+            await dbClient.query(fs.readFileSync(path.join(migrationsDir, file), 'utf8'));
+        };
+
         if (tableRes.rows.length === 0) {
             console.log('📦 Đang chạy các file migrations (tạo bảng và nạp tài khoản demo)...');
-            const migrationsDir = path.join(__dirname, '..', 'database', 'migrations');
             const files = [
                 '001_init_schema.sql',
                 '002_seed_data.sql',
                 '003_family_care.sql',
-                '004_seed_family_demo.sql'
+                '004_seed_family_demo.sql',
+                '020_seed_doctors.sql',
+                '021_seed_clinics.sql',
+                '022_seed_doctor_clinic_assignments.sql',
+                '023_seed_consultations.sql',
+                '024_consultation_fee_credit.sql',
+                '025_doctor_wallet_earning.sql',
+                '030_shop_catalog.sql',
             ];
-
-            for (const file of files) {
-                const filePath = path.join(migrationsDir, file);
-                if (fs.existsSync(filePath)) {
-                    console.log(`  -> Đang thực thi: ${file}...`);
-                    const sql = fs.readFileSync(filePath, 'utf8');
-                    await dbClient.query(sql);
-                }
-            }
+            for (const file of files) await run(file);
             console.log('🎉 Cài đặt cơ sở dữ liệu hoàn tất 100%!');
         } else {
             console.log('ℹ️ Các bảng dữ liệu và tài khoản demo đã sẵn sàng.');
+            // Máy đã cài database từ trước: bổ sung danh mục chung với trang Mua thuốc nếu chưa có
+            const shopRef = await dbClient.query(
+                `SELECT 1 FROM information_schema.columns WHERE table_name = 'pharmacies' AND column_name = 'shop_ref'`
+            );
+            if (!shopRef.rows.length) {
+                await run('030_shop_catalog.sql');
+                console.log('🎉 Đã thêm nhà thuốc, thuốc và tồn kho của trang Mua thuốc.');
+            }
         }
 
         console.log('\n✅ Bây giờ bạn có thể chạy: npm run dev');

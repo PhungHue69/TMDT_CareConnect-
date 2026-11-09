@@ -41,36 +41,36 @@
         if (sidebarEl) {
             sidebarEl.innerHTML = `
                 <div class="portal-brand">
-                    <div class="portal-brand-logo">💊</div>
+                    <div class="portal-brand-logo">${CC.icon('heart')}</div>
                     <div class="portal-brand-text">
                         <h1>CareConnect</h1>
                         <span>Pharmacy Portal</span>
                     </div>
-                    <button type="button" class="btn-sidebar-close" id="btn-close-sidebar" aria-label="Đóng menu">✕</button>
+                    <button type="button" class="btn-sidebar-close" id="btn-close-sidebar" aria-label="Đóng menu">${CC.icon('x', 'icon-sm')}</button>
                 </div>
                 <nav class="portal-nav">
                     <div class="portal-nav-group-title">Nghiệp vụ Nhà thuốc</div>
                     <a href="index.html" class="portal-nav-link ${activeNavKey === 'dashboard' ? 'active' : ''}">
-                        <span class="nav-icon">📊</span> Tổng quan
+                        <span class="nav-icon">${CC.icon('home', 'icon-sm')}</span> Tổng quan
                     </a>
                     <a href="prescriptions.html" class="portal-nav-link ${activeNavKey === 'prescriptions' ? 'active' : ''}">
-                        <span class="nav-icon">📋</span> Báo giá đơn thuốc
+                        <span class="nav-icon">${CC.icon('clipboard', 'icon-sm')}</span> Báo giá đơn thuốc
                         <span class="portal-nav-badge" id="badge-rx-count" style="display:none">0</span>
                     </a>
                     <a href="inventory.html" class="portal-nav-link ${activeNavKey === 'inventory' ? 'active' : ''}">
-                        <span class="nav-icon">📦</span> Quản lý kho thuốc
+                        <span class="nav-icon">${CC.icon('box', 'icon-sm')}</span> Quản lý kho thuốc
                     </a>
                     <a href="orders.html" class="portal-nav-link ${activeNavKey === 'orders' ? 'active' : ''}">
-                        <span class="nav-icon">🛍️</span> Đơn hàng bán ra
+                        <span class="nav-icon">${CC.icon('bag', 'icon-sm')}</span> Đơn hàng bán ra
                         <span class="portal-nav-badge" id="badge-orders-count" style="display:none">0</span>
                     </a>
                     
                     <div class="portal-nav-group-title">Tài chính & Quản trị</div>
                     <a href="wallet.html" class="portal-nav-link ${activeNavKey === 'wallet' ? 'active' : ''}">
-                        <span class="nav-icon">💰</span> Ví & Doanh thu
+                        <span class="nav-icon">${CC.icon('wallet', 'icon-sm')}</span> Ví & Doanh thu
                     </a>
                     <a href="profile.html" class="portal-nav-link ${activeNavKey === 'profile' ? 'active' : ''}">
-                        <span class="nav-icon">⚙️</span> Thông tin nhà thuốc
+                        <span class="nav-icon">${CC.icon('settings', 'icon-sm')}</span> Thông tin nhà thuốc
                     </a>
                 </nav>
                 <div class="portal-sidebar-footer">
@@ -91,7 +91,7 @@
             topbarEl.innerHTML = `
                 <div class="topbar-left">
                     <button type="button" class="btn-sidebar-toggle" id="btn-toggle-sidebar" aria-label="Mở menu">
-                        <span>☰</span>
+                        ${CC.icon('menu')}
                     </button>
                     <div class="topbar-title-group">
                         <h2 class="topbar-page-title">${CC.esc(pageTitle || 'Cổng Nhà thuốc')}</h2>
@@ -103,10 +103,10 @@
                 </div>
                 <div class="topbar-right">
                     <button class="btn btn-outline btn-sm topbar-btn" id="btn-portal-refresh" title="Tải lại dữ liệu">
-                        <span class="btn-icon">🔄</span> <span class="btn-text">Làm mới</span>
+                        <span class="btn-icon">${CC.icon('refresh', 'icon-sm')}</span> <span class="btn-text">Làm mới</span>
                     </button>
                     <button class="btn btn-outline btn-sm topbar-btn" id="btn-portal-logout" style="color:var(--danger)" title="Đăng xuất">
-                        <span class="btn-icon">🚪</span> <span class="btn-text">Đăng xuất</span>
+                        <span class="btn-icon">${CC.icon('logout', 'icon-sm')}</span> <span class="btn-text">Đăng xuất</span>
                     </button>
                 </div>
             `;
@@ -170,25 +170,25 @@
             bottomNav.className = 'portal-bottom-nav';
             bottomNav.innerHTML = `
                 <a href="index.html" class="bottom-nav-item ${activeNavKey === 'dashboard' ? 'active' : ''}">
-                    <span class="bottom-nav-icon">📊</span>
+                    <span class="bottom-nav-icon">${CC.icon('home')}</span>
                     <span class="bottom-nav-label">Tổng quan</span>
                 </a>
                 <a href="prescriptions.html" class="bottom-nav-item ${activeNavKey === 'prescriptions' ? 'active' : ''}">
-                    <span class="bottom-nav-icon">📋</span>
+                    <span class="bottom-nav-icon">${CC.icon('clipboard')}</span>
                     <span class="bottom-nav-label">Đơn thuốc</span>
                     <span class="bottom-nav-badge" id="bottom-badge-rx" style="display:none">0</span>
                 </a>
                 <a href="inventory.html" class="bottom-nav-item ${activeNavKey === 'inventory' ? 'active' : ''}">
-                    <span class="bottom-nav-icon">📦</span>
+                    <span class="bottom-nav-icon">${CC.icon('box')}</span>
                     <span class="bottom-nav-label">Kho thuốc</span>
                 </a>
                 <a href="orders.html" class="bottom-nav-item ${activeNavKey === 'orders' ? 'active' : ''}">
-                    <span class="bottom-nav-icon">🛍️</span>
+                    <span class="bottom-nav-icon">${CC.icon('bag')}</span>
                     <span class="bottom-nav-label">Đơn hàng</span>
                     <span class="bottom-nav-badge" id="bottom-badge-orders" style="display:none">0</span>
                 </a>
                 <a href="wallet.html" class="bottom-nav-item ${activeNavKey === 'wallet' ? 'active' : ''}">
-                    <span class="bottom-nav-icon">💰</span>
+                    <span class="bottom-nav-icon">${CC.icon('wallet')}</span>
                     <span class="bottom-nav-label">Ví & Tiền</span>
                 </a>
             `;

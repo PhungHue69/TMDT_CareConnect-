@@ -49,7 +49,7 @@
         .rx-row { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
         .rx-muted { color:#6b7280; font-size:14px; }
         .rx-tag { display:inline-block; padding:2px 10px; border-radius:999px; background:#eef2ff; color:#3730a3; font-size:12px; margin-left:6px; }
-        .rx-btn { border:0; border-radius:10px; padding:8px 16px; background:#e8f0fe; color:#1a56db; font-weight:600; cursor:pointer; font-size:14px; }
+        .rx-btn { border:0; border-radius:10px; padding:8px 16px; background:#e8f0fe; color:#2563eb; font-weight:600; cursor:pointer; font-size:14px; }
         .rx-btn.primary { background:#0f9d6b; color:#fff; }
         .rx-btn.ghost { background:#f3f4f6; color:#374151; }
         .rx-btn:disabled { opacity:.5; cursor:not-allowed; }

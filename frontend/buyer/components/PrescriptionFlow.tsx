@@ -1,8 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { ApiError, submitPrescriptionRequest, type Pharmacy } from "@/lib/api";
-import { newRequestKey } from "@/lib/requestKey";
+import type { Pharmacy } from "@/lib/api";
+import { BuyerApiError, fileToDataUrl, sendPrescriptionImage } from "@/lib/buyerApi";
+import { LoginPrompt, RecipientPicker, useBuyerSession } from "./BuyerSession";
 import { CameraIcon, CheckIcon, CloseIcon, ImageIcon, InfoIcon, SendIcon, UploadIcon } from "./icons";
 
 const MAX_BYTES = 5 * 1024 * 1024;
@@ -21,8 +23,10 @@ export default function PrescriptionFlow({
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [toDoctor, setToDoctor] = useState(false);
+  const [session] = useBuyerSession();
+  const [patientId, setPatientId] = useState<number | null>(null);
   const submitting = useRef(false);
-  const attempt = useRef<{ file: File; key: string } | null>(null);
   const cancelled = useRef(false);
   useEffect(() => {
     cancelled.current = false;
@@ -37,32 +41,32 @@ export default function PrescriptionFlow({
     if (!next) return;
     if (!TYPES.includes(next.type)) return setError("Chỉ hỗ trợ ảnh JPG, PNG hoặc WebP.");
     if (next.size > MAX_BYTES) return setError("Ảnh vượt quá 5MB.");
-    attempt.current = null;
+    setToDoctor(false);
     setPreview({ file: next, url: URL.createObjectURL(next) });
     onFile(next);
   }
 
+  const ready = session.status === "ready" ? session : null;
+  const patient = patientId ?? ready?.meId ?? null;
+
   async function submit() {
-    if (!file || busy || submitting.current) return;
+    if (!file || busy || submitting.current || !patient) return;
     submitting.current = true;
     setBusy(true);
     setError(null);
     setMessage(null);
+    setToDoctor(false);
     try {
-      if (!attempt.current || attempt.current.file !== file) attempt.current = { file, key: newRequestKey() };
-      await submitPrescriptionRequest(pharmacy.id, file, attempt.current.key);
+      // AI kiểm tra ảnh ở máy chủ; ảnh hợp lệ được chuyển ngay tới Cổng Nhà thuốc để dược sĩ báo giá
+      await sendPrescriptionImage({ pharmacy_ref: pharmacy.id, patient_user_id: patient, image_data_url: await fileToDataUrl(file) });
       if (cancelled.current) return;
-      attempt.current = null;
       onFile(null);
       setPreview(null);
-      setMessage("Gửi đơn thuốc thành công");
+      setMessage("Đã gửi đơn thuốc cho nhà thuốc");
     } catch (e) {
       if (cancelled.current) return;
-      if (e instanceof ApiError && e.status === 422) {
-        setError(e.message);
-      } else {
-        setError(e instanceof Error ? e.message : "Không gửi được ảnh. Hãy thử lại.");
-      }
+      setToDoctor(e instanceof BuyerApiError && e.redirect === "DOCTOR");
+      setError(e instanceof Error ? e.message : "Không gửi được ảnh. Hãy thử lại.");
     } finally {
       submitting.current = false;
       setBusy(false);
@@ -129,7 +133,7 @@ export default function PrescriptionFlow({
               <strong className="block truncate text-[0.9375rem] font-semibold text-brand">{file.name}</strong>
               <span className="flex items-center gap-1.5 text-[0.8125rem] text-[#14713A]"><CheckIcon />Đã chọn · {formatSize(file.size)}</span>
             </div>
-            <button type="button" aria-label="Xóa ảnh" disabled={busy} onClick={() => { onFile(null); setPreview(null); attempt.current = null; setError(null); }} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[0.625rem] bg-page text-muted hover:text-ink disabled:opacity-50">
+            <button type="button" aria-label="Xóa ảnh" disabled={busy} onClick={() => { onFile(null); setPreview(null); setError(null); setToDoctor(false); }} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[0.625rem] bg-page text-muted hover:text-ink disabled:opacity-50">
               <CloseIcon />
             </button>
           </div>
@@ -153,9 +157,20 @@ export default function PrescriptionFlow({
           <InfoIcon className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
           <span>AI chỉ sàng lọc ảnh có phải đơn thuốc hay không; dược sĩ sẽ kiểm tra ảnh gốc. Ảnh ghi triệu chứng hoặc nhờ kê đơn sẽ bị từ chối.</span>
         </div>
+        {session.status === "guest" && <LoginPrompt text="Đăng nhập để gửi đơn thuốc và nhận báo giá." />}
+        {ready && patient && (
+          <div className="rounded-2xl border border-line bg-white p-4">
+            <RecipientPicker ctx={ready.ctx} meId={ready.meId} value={patient} onChange={setPatientId} label="Đơn thuốc của" />
+          </div>
+        )}
+        {toDoctor && (
+          <Link href="/doctor" className="flex w-full items-center justify-center rounded-2xl border-2 border-brand bg-white px-4 py-3 font-semibold text-brand hover:bg-brand-soft">
+            Tư vấn bác sĩ online (từ 5.000đ)
+          </Link>
+        )}
         <button
           type="button"
-          disabled={!file || busy}
+          disabled={!file || busy || !patient}
           onClick={() => void submit()}
           aria-live="polite"
           className={`flex w-full items-center justify-center gap-2.5 rounded-2xl px-4 py-3 text-[1.0625rem] font-semibold text-white disabled:opacity-60 ${message || error ? "disabled:opacity-100" : ""} ${
@@ -172,7 +187,7 @@ export default function PrescriptionFlow({
           ) : message ? (
             <>
               <span className="flex items-center gap-2"><CheckIcon className="h-5 w-5" />{message}</span>
-              <span className="text-[0.8125rem] font-normal text-white/90">Bản demo: đã lưu yêu cầu; chưa chuyển tới hệ thống dược sĩ.</span>
+              <span className="text-[0.8125rem] font-normal text-white/90">Dược sĩ sẽ báo giá, bạn theo dõi ở mục Đơn hàng.</span>
             </>
           ) : (
             <span className="flex items-center gap-2.5"><SendIcon />Gửi đơn thuốc cho nhà thuốc</span>

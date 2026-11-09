@@ -9,11 +9,11 @@
 
     // Các mục chưa làm hiển thị mờ để cả nhóm thấy khung menu cuối cùng
     const NAV = [
-        { key: 'dashboard', icon: '🏠', label: 'Tổng quan', href: 'index.html' },
-        { key: 'queue', icon: '💬', label: 'Hàng chờ khám', href: 'queue.html' },
-        { key: 'prescribe', icon: '📝', label: 'Kê đơn điện tử', href: 'prescribe.html' },
-        { key: 'wallet', icon: '💰', label: 'Ví và thu nhập', href: 'wallet.html' },
-        { key: 'reviews', icon: '⭐', label: 'Đánh giá', href: 'reviews.html' },
+        { key: 'dashboard', icon: 'home', label: 'Tổng quan', href: 'index.html' },
+        { key: 'queue', icon: 'clipboard', label: 'Hàng chờ khám', href: 'queue.html' },
+        { key: 'prescribe', icon: 'edit', label: 'Kê đơn điện tử', href: 'prescribe.html' },
+        { key: 'wallet', icon: 'wallet', label: 'Ví và thu nhập', href: 'wallet.html' },
+        { key: 'reviews', icon: 'star', label: 'Đánh giá', href: 'reviews.html' },
     ];
 
     async function initDoctorLayout(activeKey, pageTitle) {
@@ -44,15 +44,15 @@
         document.body.prepend(bar);
 
         const links = NAV.map((n) => n.soon
-            ? `<span class="dr-nav-link is-disabled" aria-disabled="true">${n.icon} ${n.label}<small>sắp có</small></span>`
-            : `<a class="dr-nav-link ${n.key === activeKey ? 'active' : ''}" href="${n.href}">${n.icon} ${n.label}</a>`
+            ? `<span class="dr-nav-link is-disabled" aria-disabled="true">${CC.icon(n.icon, 'icon-sm')} ${n.label}<small>sắp có</small></span>`
+            : `<a class="dr-nav-link ${n.key === activeKey ? 'active' : ''}" href="${n.href}">${CC.icon(n.icon, 'icon-sm')} ${n.label}</a>`
         ).join('');
 
         const sidebar = CC.$('#dr-sidebar');
         if (sidebar) {
             sidebar.innerHTML = `
                 <div class="dr-brand">
-                    <div class="dr-brand-logo">🩺</div>
+                    <div class="dr-brand-logo">${CC.icon('doctor')}</div>
                     <div><h1>CareConnect</h1><span>Cổng Bác sĩ</span></div>
                 </div>
                 <nav class="dr-nav" aria-label="Menu chính">${links}</nav>

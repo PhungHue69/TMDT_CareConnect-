@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { API, nearby, pharmacyDetail, pharmacyRating, pharmacyProducts, resolveAddress, submitPrescriptionRequest, suggestAddresses } from "./api.ts";
+import { API, nearby, pharmacyDetail, pharmacyRating, pharmacyProducts, resolveAddress, suggestAddresses } from "./api.ts";
 
 test("browser API requests use the same origin", async () => {
   const requests: string[] = [];
@@ -64,28 +64,6 @@ test("pharmacy catalog request stays scoped to selected pharmacy", async () => {
     assert.equal(new URL(url, "http://example.test").searchParams.get("category"), null);
     await pharmacyProducts(17, "", 1, "TPCN");
     assert.equal(new URL(url, "http://example.test").searchParams.get("category"), "TPCN");
-  } finally {
-    globalThis.fetch = previous;
-  }
-});
-
-test("prescription image request includes the chosen pharmacy and original image", async () => {
-  const previous = globalThis.fetch;
-  let submitted: FormData | undefined;
-  let url = "";
-  globalThis.fetch = (async (input: string | URL | Request, options?: RequestInit) => {
-    url = String(input);
-    submitted = options?.body as FormData;
-    return new Response('{"id":12,"pharmacy_id":17,"status":"PENDING_PHARMACIST"}', { status: 201 });
-  }) as typeof fetch;
-  try {
-    const image = new File(["image"], "sample.png", { type: "image/png" });
-    const result = await submitPrescriptionRequest(17, image, "test-attempt-123");
-    assert.equal(url, "/demo-api/prescriptions/requests");
-    assert.equal(submitted?.get("request_key"), "test-attempt-123");
-    assert.equal(submitted?.get("pharmacy_id"), "17");
-    assert.equal(submitted?.get("image"), image);
-    assert.equal(result.status, "PENDING_PHARMACIST");
   } finally {
     globalThis.fetch = previous;
   }

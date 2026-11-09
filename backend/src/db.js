@@ -10,6 +10,12 @@ types.setTypeParser(1082, (v) => v);
 
 const pool = new Pool({ connectionString: DATABASE_URL });
 
+// Kết nối đang rảnh bị ngắt (PostgreSQL khởi động lại, xóa/tạo lại database khi reset demo):
+// chỉ ghi log, pool tự mở kết nối mới ở lần truy vấn sau. Không bắt sự kiện này thì cả server bị dừng.
+pool.on('error', (err) => {
+    console.error('[db] Mất một kết nối PostgreSQL đang rảnh:', err.message);
+});
+
 async function withTransaction(fn) {
     const client = await pool.connect();
     try {

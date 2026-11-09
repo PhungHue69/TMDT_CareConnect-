@@ -32,12 +32,12 @@ app.use('/api/profile', requireAuth, require('./routes/profile'));
 app.use('/api/family', requireAuth, require('./routes/family'));
 app.use('/api/reminders', requireAuth, require('./routes/reminders'));
 app.use('/api/notifications', requireAuth, require('./routes/notifications'));
-app.use('/api/notifications', requireAuth, require('./routes/notifications'));
+
+// Người mua: đặt đơn, gửi đơn thuốc, đặt khám, đặt lịch phòng khám (dùng chung cho Mua thuốc và Family Care)
+app.use('/api/buyer', requireAuth, require('./routes/buyer'));
 
 // Phân hệ Bác sĩ - Doctor Portal (TV3)
 app.use('/api/doctor', requireAuth, requireDoctor, require('./routes/doctor'));
-
-if (DEMO_MODE) app.use('/api/demo', requireAuth, require('./routes/demo'));
 
 // Phân hệ Nhà thuốc - Pharmacy Portal (TV4)
 app.use('/api/pharmacy', requireAuth, requirePharmacist, require('./routes/pharmacy'));

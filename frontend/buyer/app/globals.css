@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
-/* Blue, compact pharmacy layout inspired by the provided Website HTML; data and routes remain live. */
+/* Bộ màu và font chung của toàn hệ thống CareConnect (giống frontend/shared/css/base.css). */
 @theme {
-  --color-brand: #1a56db;
-  --color-brand-dark: #1442a8;
-  --color-brand-soft: #dce6fb;
-  --color-page: #f4f7fc;
-  --color-line: #e3e8f2;
-  --color-ink: #0f1e3d;
-  --color-muted: #56607a;
+  --color-brand: #2563eb;
+  --color-brand-dark: #1d4ed8;
+  --color-brand-soft: #dbeafe;
+  --color-page: #f5f7fb;
+  --color-line: #e2e8f0;
+  --color-ink: #1e293b;
+  --color-muted: #64748b;
   --color-accent: #d97706;
   --color-accent-soft: #fff3e3;
   --color-accent-line: #e0a25a;
@@ -16,23 +16,70 @@
   --color-warn-ink: #92400e;
   --color-danger-bg: #fee2e2;
   --color-danger-ink: #991b1b;
-  --font-display: var(--font-lexend), "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Be Vietnam Pro", "Segoe UI", ui-sans-serif, system-ui, Arial, sans-serif;
+  --font-display: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 html {
   color-scheme: light;
 }
 
-/* Desktop-width screens render everything ~25% smaller; phones and tablets keep the default 16px root. */
+/* Laptop: chữ nhỏ hơn một chút cho gọn, cùng cỡ với các trang Family Care (15px) */
 @media (min-width: 1024px) {
-  html { font-size: 12px; }
+  html { font-size: 15px; }
 }
 
 body {
+  margin: 0;
   background: var(--color-page);
   color: var(--color-ink);
   font-family: var(--font-sans);
+}
+
+/* =============================================================================
+   Khung ứng dụng Người dùng (components/UserShell.tsx). Kích thước bằng px và giống hệt
+   .sidebar/.topbar/.tabbar trong frontend/shared/css/base.css của các trang Family Care.
+   ============================================================================= */
+.us-app { min-height: 100vh; padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
+.us-sidebar { display: none; }
+.us-brand { display: flex; align-items: center; gap: 8px; padding: 4px 8px 18px; font-size: 17.6px; font-weight: 700; color: var(--color-brand); text-decoration: none; }
+.us-brand-mark { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 10px; background: var(--color-brand); color: #fff; }
+.us-nav-link { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 10px; color: var(--color-muted); font-size: 15px; font-weight: 500; text-decoration: none; }
+.us-nav-link:hover { background: #eff6ff; color: var(--color-brand); }
+.us-nav-link.active { background: var(--color-brand-soft); color: var(--color-brand); }
+.us-sidebar-footer { margin-top: auto; padding: 12px 8px 0; border-top: 1px solid var(--color-line); font-size: 13px; }
+.us-sidebar-footer a { color: var(--color-muted); text-decoration: none; }
+.us-sidebar-footer a:hover { color: var(--color-brand); }
+
+.us-topbar { position: sticky; top: 0; z-index: 1000; display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 16px; background: #fff; border-bottom: 1px solid var(--color-line); }
+.us-topbar-title { flex: 1; font-size: 17.6px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.us-icon-btn { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #eff6ff; color: var(--color-brand); }
+.us-icon-btn:hover { background: var(--color-brand-soft); }
+.us-count { position: absolute; top: -2px; right: -2px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; border: 2px solid #fff; background: #d92d20; color: #fff; font-size: 11px; font-weight: 700; line-height: 14px; text-align: center; }
+
+.us-content { width: 100%; max-width: 1120px; margin: 0 auto; padding: 16px; }
+
+.us-tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 1100; display: flex; height: calc(64px + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: #fff; border-top: 1px solid var(--color-line); }
+.us-tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--color-muted); font-size: 11px; font-weight: 500; text-decoration: none; }
+.us-tab.active { color: var(--color-brand); }
+.us-tab svg { width: 24px; height: 24px; }
+
+/* Điện thoại xoay ngang: thanh tab thành rail dọc bên trái */
+@media (orientation: landscape) and (max-height: 540px) and (max-width: 1023px) {
+  .us-app { padding-bottom: 0; padding-left: 76px; }
+  .us-tabbar { top: 0; right: auto; width: 76px; height: auto; flex-direction: column; justify-content: center; padding: 0 0 0 env(safe-area-inset-left); border-top: 0; border-right: 1px solid var(--color-line); }
+  .us-tab { flex: 0 0 auto; height: 58px; }
+  .us-topbar { height: 48px; }
+  .us-content { padding: 12px 16px; }
+}
+
+/* Laptop: menu trái cố định, ẩn thanh tab */
+@media (min-width: 1024px) {
+  .us-app { padding-bottom: 0; padding-left: 240px; }
+  .us-tabbar { display: none; }
+  .us-sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 1050; display: flex; flex-direction: column; gap: 4px; width: 240px; padding: 18px 14px; background: #fff; border-right: 1px solid var(--color-line); }
+  .us-topbar { height: 64px; padding: 0 32px; }
+  .us-content { padding: 24px 32px 40px; }
 }
 
 /* Leaflet controls and popups restyled to match the reference map card. */

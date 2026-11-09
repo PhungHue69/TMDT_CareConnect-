@@ -18,13 +18,21 @@
         HELP_REQUEST: { icon: 'cart', cls: 'warn' },
         FAMILY_LINK_REQUEST: { icon: 'users', cls: '' },
         FAMILY_LINKED: { icon: 'users', cls: 'ok' },
+        E_PRESCRIPTION: { icon: 'file', cls: 'ok' },
+        CONSULTATION_BOOKED: { icon: 'video', cls: '' },
+        QUOTE: { icon: 'file', cls: 'order' },
     };
+
+    // Báo giá đơn thuốc do Cổng Nhà thuốc gửi (không có kind riêng)
+    const kindOf = (n) => (n.data_json || {}).kind || (n.type === 'PRESCRIPTION_QUOTE' ? 'QUOTE' : '');
 
     // Bấm vào thông báo thì mở màn hình liên quan
     function targetUrl(n) {
         const d = n.data_json || {};
-        switch (d.kind) {
-            case 'RING': case 'REMINDER_CREATED': case 'ORDER_STATUS': return 'index.html';
+        switch (kindOf(n)) {
+            case 'RING': case 'REMINDER_CREATED': return 'index.html';
+            case 'ORDER_STATUS': case 'QUOTE': return '/shop/orders';
+            case 'E_PRESCRIPTION': case 'CONSULTATION_BOOKED': return '/shop/doctor?tab=mine';
             case 'MISSED_DOSE': case 'DOSE_TAKEN': case 'DOSE_SKIPPED': return `reminders.html?patient_id=${d.patient_id}`;
             case 'FAMILY_LINK_REQUEST': case 'FAMILY_LINK_REJECTED': case 'FAMILY_UNLINKED': return 'family.html';
             case 'FAMILY_LINKED': return d.user_id && user.ui_mode !== 'SIMPLE' ? `family.html?member=${d.user_id}` : 'family.html';
@@ -86,7 +94,7 @@
     }
 
     function item(n) {
-        const style = KIND_STYLE[(n.data_json || {}).kind] || { icon: 'bell', cls: '' };
+        const style = KIND_STYLE[kindOf(n)] || { icon: 'bell', cls: '' };
         return `
             <div class="noti ${n.is_read ? '' : 'unread'}" data-noti="${n.id}" role="button" tabindex="0">
                 <span class="noti-icon ${style.cls}">${CC.icon(style.icon, 'icon-sm')}</span>

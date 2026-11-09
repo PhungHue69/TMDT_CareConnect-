@@ -3,12 +3,14 @@ const router = require('express').Router();
 const db = require('../db');
 const { ah, HttpError } = require('../utils/http');
 const { loadDoctor } = require('../middleware/doctorAuth');
+const { notify } = require('../services/notifications');
 
 const FEE_MIN = 5000;
 const FEE_MAX = 30000;
 const MODES = ['CHAT', 'AUDIO', 'VIDEO'];
 
-// Hoa hồng sàn khi tất toán ca khám (10%). Đổi tại đây nếu nhóm chốt số khác.
+// Hoa hồng sàn khi tất toán ca khám: dùng tỷ lệ đã chốt lúc người bệnh đặt khám (consultations.commission_rate,
+// lấy từ commission_rules 'CONSULTATION'). Số dưới đây chỉ dùng cho ca khám không có tỷ lệ.
 const PLATFORM_FEE_RATE = 0.1;
 // Giá trị enum transaction_type cho khoản thu nhập từ ca khám.
 // PHẢI khớp enum trong DB (xem migration của bảng wallet_transactions), nếu sai sẽ báo lỗi 500.
@@ -72,8 +74,7 @@ router.get('/consultations', ah(async (req, res) => {
         `SELECT c.id, c.mode, c.status, c.fee_amount, c.symptom_description,
                 c.scheduled_at, c.created_at,
                 u.full_name AS patient_name,
-                EXISTS (SELECT 1 FROM prescriptions p WHERE p.consultation_id = c.id) AS has_prescription,
-                (c.fee_credit_order_id IS NOT NULL) AS fee_credit_used
+                EXISTS (SELECT 1 FROM prescriptions p WHERE p.consultation_id = c.id) AS has_prescription
          FROM consultations c
          JOIN users u ON u.id = c.patient_user_id
          WHERE c.doctor_profile_id = $1
@@ -106,7 +107,8 @@ router.get('/drugs', ah(async (req, res) => {
                 product_type, reference_price, image_url
          FROM master_drugs
          WHERE $1 = '' OR name ILIKE '%' || $1 || '%' OR active_ingredient ILIKE '%' || $1 || '%'
-         ORDER BY name
+         -- Ưu tiên thuốc đang bán ở các nhà thuốc trên trang Mua thuốc để người bệnh mua được theo đơn
+         ORDER BY (shop_ref IS NULL), name
          LIMIT 20`,
         [q]
     );
@@ -135,7 +137,8 @@ router.post('/consultations/:id/prescription', ah(async (req, res) => {
 
     // Ca khám phải thuộc bác sĩ này (lấy thêm fee_amount để tất toán)
     const c = await db.query(
-        'SELECT id, patient_user_id, fee_amount FROM consultations WHERE id = $1 AND doctor_profile_id = $2',
+        `SELECT id, patient_user_id, booker_user_id, fee_amount, commission_rate, payment_status
+         FROM consultations WHERE id = $1 AND doctor_profile_id = $2`,
         [req.params.id, req.doctor.id]
     );
     if (!c.rows[0]) throw new HttpError(404, 'Không tìm thấy ca khám');
@@ -171,14 +174,33 @@ router.post('/consultations/:id/prescription', ah(async (req, res) => {
     );
 
     const diagText = diagnosis ? String(diagnosis).slice(0, 1000) : null;
+    // Khám xong: phí khám đang tạm giữ (Escrow) được giải phóng
     await db.query(
-        `UPDATE consultations SET diagnosis = $1, status = 'COMPLETED', ended_at = NOW() WHERE id = $2`,
+        `UPDATE consultations SET diagnosis = $1, status = 'COMPLETED', ended_at = NOW(),
+                payment_status = CASE WHEN payment_status = 'HOLDING_ESCROW' THEN 'RELEASED'::payment_status_enum ELSE payment_status END
+         WHERE id = $2`,
         [diagText, c.rows[0].id]
     );
 
+    // Báo người bệnh (và người đặt khám hộ, ví dụ con đặt cho bố mẹ) để mang đơn đi mua thuốc
+    const notifyTo = new Set([Number(c.rows[0].patient_user_id), Number(c.rows[0].booker_user_id)].filter(Boolean));
+    for (const userId of notifyTo) {
+        try {
+            await notify(userId, {
+                type: 'CONSULTATION_UPDATE',
+                title: 'Bác sĩ đã kê đơn thuốc',
+                body: `${req.doctor.specialty ? req.doctor.specialty + ' · ' : ''}Chẩn đoán: ${diagText || 'xem trong đơn'}. Vào mục Khám bác sĩ để gửi đơn cho nhà thuốc gần nhà.`,
+                data: { kind: 'E_PRESCRIPTION', consultation_id: Number(c.rows[0].id), prescription_id: Number(rows[0].prescription_id) },
+            });
+        } catch (err) {
+            console.error('notify', err.message);
+        }
+    }
+
     // Tất toán: cộng tiền vào ví bác sĩ sau khi trừ hoa hồng sàn
     const fee = Number(c.rows[0].fee_amount) || 0;
-    const net = Math.round(fee * (1 - PLATFORM_FEE_RATE));
+    const rate = c.rows[0].commission_rate === null ? PLATFORM_FEE_RATE : Number(c.rows[0].commission_rate);
+    const net = Math.round(fee * (1 - rate));
     const commission = fee - net;
     if (net > 0) {
         let w = await db.query(

@@ -55,23 +55,9 @@ export type Location = { province: string; lat: number; lng: number; wards: Loca
 
 export type StockPharmacy = Pharmacy & { items: { drug_id: number; quantity: number }[] };
 
-export type OrderBody = {
-  pharmacy_id: number;
-  prescription_id: number | null;
-  items: { drug_id: number; quantity: number }[];
-};
-
-export type OrderResult = {
-  id: number;
-  total_amount: number;
-  status: string;
-  items: unknown[];
-};
-
 export type DrugParams = { category?: DrugCategory; q?: string };
 export type InStockDrug = Drug & { stock_quantity: number };
 export type PharmacyProducts = { items: InStockDrug[]; total: number; page: number; limit: number };
-export type PrescriptionRequestResult = { id: number; pharmacy_id: number; status: "PENDING_PHARMACIST" };
 
 export class ApiError extends Error {
   readonly status: number;
@@ -146,14 +132,6 @@ export async function pharmacyProducts(pharmacyId: number, q = "", page = 1, cat
   return parse(await fetch(`${API}/pharmacies/${pharmacyId}/products?${qs}`));
 }
 
-export async function submitPrescriptionRequest(pharmacyId: number, image: File, requestKey?: string): Promise<PrescriptionRequestResult> {
-  const form = new FormData();
-  form.append("pharmacy_id", String(pharmacyId));
-  if (requestKey) form.append("request_key", requestKey);
-  form.append("image", image);
-  return parse(await fetch(`${API}/prescriptions/requests`, { method: "POST", body: form }));
-}
-
 export async function drugs(params: DrugParams = {}): Promise<Drug[]> {
   const qs = new URLSearchParams();
   if (params.category) qs.set("category", params.category);
@@ -165,12 +143,4 @@ export async function analyze(form: FormData): Promise<AnalyzeResult> {
   return parse(await fetch(`${API}/prescriptions/analyze`, { method: "POST", body: form }));
 }
 
-export async function placeOrder(body: OrderBody): Promise<OrderResult> {
-  return parse(
-    await fetch(`${API}/orders`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    }),
-  );
-}
+// Đặt hàng và gửi đơn thuốc cho nhà thuốc đi qua API Node chung: xem lib/buyerApi.ts

@@ -79,6 +79,21 @@ Tất cả API (trừ đăng ký/đăng nhập) cần header `Authorization: Bea
 | GET | `/api/notifications`, POST `/:id/read`, `/read-all` | Chuông báo |
 | GET | `/api/notifications/stream?token=` | Kênh realtime (Server-Sent Events) |
 
+### API người mua dùng chung (`/api/buyer`, file `backend/src/routes/buyer.js`)
+
+Trang Mua thuốc (Next.js) gọi các API này để ghi giao dịch vào PostgreSQL chung. `pharmacy_ref` / `drug_ref` là id phía trang Mua thuốc (cột `shop_ref`).
+
+| Method | Đường dẫn | Mô tả |
+|---|---|---|
+| GET | `/api/buyer/context` | Người có thể nhận thuốc (mình + người thân được đặt hộ) và địa chỉ |
+| POST/GET | `/api/buyer/orders` | Đặt đơn thuốc không kê đơn `{ pharmacy_ref, items: [{ drug_ref, quantity }], recipient_user_id, address_id, payment_gateway }` / đơn của tôi |
+| POST | `/api/buyer/orders/:id/cancel` | Hủy khi nhà thuốc chưa xác nhận (hoàn tiền tạm giữ) |
+| POST/GET | `/api/buyer/prescription-requests` | Gửi đơn cho nhà thuốc báo giá: ảnh `{ pharmacy_ref, image_data_url, patient_user_id }` (AI kiểm tra ở máy chủ) hoặc đơn bác sĩ `{ pharmacy_id, prescription_id }` |
+| POST | `/api/buyer/prescription-requests/:id/accept` | Đồng ý báo giá → tạo đơn hàng |
+| GET | `/api/buyer/prescriptions`, `/prescriptions/:id/pharmacies?lat&lng` | Đơn bác sĩ kê; nhà thuốc gần còn thuốc |
+| GET/POST | `/api/buyer/doctors`, `/api/buyer/consultations` | Danh sách bác sĩ; đặt khám (phí tạm giữ tới khi bác sĩ kê đơn) |
+| GET/POST | `/api/buyer/clinics`, `/api/buyer/clinic-bookings` | Phòng khám; đặt lịch |
+
 ## Cho các phân hệ khác
 
 **Dùng chung giao diện:** `frontend/shared/css/base.css` (màu, nút, form, card, modal, khung responsive) và `frontend/shared/js/api.js` (`CC.api`, `CC.auth`, `CC.toast`, `CC.modal`). Các phân hệ khác có thể dùng lại thay vì viết lại.

@@ -6,14 +6,14 @@
     const CC = window.CC;
 
     /*
-     * Các dịch vụ trên trang chủ. Khi ghép phân hệ, thành viên phụ trách sửa href
-     * tới trang của mình và đổi ready thành true.
+     * Các dịch vụ trên trang chủ. Mua thuốc, Khám bác sĩ, Phòng khám nằm ở ứng dụng Mua thuốc (/shop),
+     * dùng chung tài khoản đăng nhập. Phân hệ chưa sẵn sàng thì để ready: false.
      */
     const SERVICES = [
-        { label: 'Mua thuốc', desc: 'Thuốc không kê đơn, TPCN, thiết bị y tế quanh bạn', icon: 'cart', href: '', owner: 'TV2', ready: false },
-        { label: 'Gửi đơn thuốc', desc: 'Chụp đơn, AI kiểm tra rồi gửi nhà thuốc báo giá', icon: 'file', href: '', owner: 'TV2', ready: false },
-        { label: 'Khám bác sĩ online', desc: 'Chat, gọi video với bác sĩ từ 5.000đ', icon: 'video', href: '', owner: 'TV3', ready: false },
-        { label: 'Đặt lịch phòng khám', desc: 'Chọn phòng khám, ngày giờ cho mình hoặc người thân', icon: 'calendar', href: '', owner: 'TV4', ready: false },
+        { label: 'Mua thuốc', desc: 'Thuốc không kê đơn, TPCN, thiết bị y tế quanh bạn', icon: 'cart', href: '/shop', owner: 'TV2', ready: true },
+        { label: 'Gửi đơn thuốc', desc: 'Chọn nhà thuốc, chụp đơn, AI kiểm tra rồi dược sĩ báo giá', icon: 'file', href: '/shop', owner: 'TV2', ready: true },
+        { label: 'Khám bác sĩ online', desc: 'Chat, gọi video với bác sĩ từ 5.000đ', icon: 'video', href: '/shop/doctor', owner: 'TV3', ready: true },
+        { label: 'Đặt lịch phòng khám', desc: 'Chọn phòng khám, ngày giờ cho mình hoặc người thân', icon: 'calendar', href: '/shop/doctor?tab=clinics', owner: 'TV4', ready: true },
         { label: 'Gia đình', desc: 'Liên kết với gia đình, xem hồ sơ sức khỏe', icon: 'users', href: 'family.html', owner: 'TV1', ready: true },
         { label: 'Lịch uống thuốc', desc: 'Nhắc giờ uống thuốc cho mình và người thân', icon: 'clock', href: 'reminders.html', owner: 'TV1', ready: true },
     ];

@@ -1,14 +1,8 @@
 /* Đánh giá của bệnh nhân dành cho bác sĩ */
 (function () {
+    // Token của tab hiện tại (mỗi tab giữ một tài khoản riêng, xem shared/js/api.js)
     function findToken() {
-        for (const store of [localStorage, sessionStorage]) {
-            for (let i = 0; i < store.length; i++) {
-                let v = store.getItem(store.key(i)) || '';
-                try { const o = JSON.parse(v); if (o && typeof o === 'object') v = o.token || o.accessToken || v; } catch (e) { /* giữ nguyên */ }
-                if (typeof v === 'string' && /^eyJ[\w-]+\.[\w-]+\.[\w-]+$/.test(v)) return v;
-            }
-        }
-        return '';
+        return (window.CC && window.CC.auth.token) || '';
     }
 
     const $ = (id) => document.getElementById(id);
@@ -34,5 +28,5 @@
             $('summary').innerHTML = '<span style="color:#dc2626">Không tải được đánh giá: ' + esc(e.message) + '</span>';
         }
     }
-    load();
+    window.initDoctorLayout('reviews', 'Đánh giá của bệnh nhân').then((me) => { if (me) load(); });
 })();
